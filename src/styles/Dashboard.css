@@ -1,0 +1,311 @@
+/* Dashboard base */
+.dashboard-wrapper {
+  padding: 22px 28px;
+  min-height: calc(100vh - 40px);
+  background: #f6f7ff;
+  color: #1f2b46;
+}
+
+/* ---------- QUICK STATS GRID ---------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 16px 18px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(60, 70, 140, 0.06);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(60, 70, 140, 0.10);
+}
+
+.stat-left {
+  display: inline-block;
+}
+
+.stat-value {
+  font-size: 26px;
+  margin: 0 0 6px 0;
+  color: #2b3aa8;
+  letter-spacing: 0.2px;
+}
+
+.stat-title {
+  margin: 0;
+  font-weight: 600;
+  color: #516089;
+}
+
+.stat-icon {
+  position: absolute;
+  right: 16px;
+  top: 14px;
+  font-size: 30px;
+  opacity: 0.12;
+  user-select: none;
+}
+
+.stat-hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #8892b0;
+}
+
+/* responsive tweak for stats */
+@media (max-width: 1000px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- MAIN GRID ---------- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+}
+
+/* card base */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(60, 70, 140, 0.05);
+  padding: 16px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(60, 70, 140, 0.08);
+}
+
+/* drives card */
+.drives-card .card-header,
+.notice-card .card-header,
+.activity-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.btn.small-outline {
+  background: transparent;
+  border: 1px solid #d7dbff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #3b4bdd;
+  font-weight: 600;
+  transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.btn.small-outline:hover {
+  background: #f0f2ff;
+  border-color: #c9cffd;
+  transform: translateY(-1px);
+}
+
+.btn.small-outline:active {
+  transform: translateY(0px);
+}
+
+/* drives list rows */
+.drives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.drive-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fbfbff;
+  border: 1px solid #f0f2ff;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.drive-row:hover {
+  background: #f7f8ff;
+  border-color: #e6e9ff;
+}
+
+.drive-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.drive-company {
+  font-weight: 700;
+  color: #243273;
+}
+
+.drive-role {
+  font-size: 13px;
+  color: #6d7290;
+  margin-top: 4px;
+}
+
+.drive-meta {
+  text-align: right;
+  min-width: 140px;
+}
+
+.drive-date {
+  font-size: 13px;
+  color: #6d7290;
+  margin-bottom: 6px;
+}
+
+.drive-status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+}
+
+.drive-status.open {
+  background: #eaf3ff;
+  color: #1f66ff;
+}
+
+.drive-status.closed {
+  background: #fff0f0;
+  color: #d0342c;
+}
+
+/* notice list */
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 260px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.notice-row {
+  padding: 10px;
+  border-radius: 8px;
+  background: #fcfcff;
+  border: 1px solid #f1f3ff;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.notice-row:hover {
+  background: #f7f8ff;
+  border-color: #e6e9ff;
+}
+
+.notice-title {
+  font-weight: 700;
+  color: #243273;
+  margin-bottom: 6px;
+}
+
+.notice-text {
+  font-size: 14px;
+  color: #5e6788;
+  line-height: 1.5;
+}
+
+/* activity */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 200px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.activity-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px;
+  border-radius: 8px;
+  background: #fbfbff;
+  border: 1px solid #f1f3ff;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.activity-row:hover {
+  background: #f7f8ff;
+  border-color: #e6e9ff;
+}
+
+.activity-text {
+  color: #55607d;
+  line-height: 1.4;
+}
+
+.activity-time {
+  font-size: 12px;
+  color: #93a0c6;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+/* scrollbar polish (small + clean) */
+.notice-list::-webkit-scrollbar,
+.activity-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notice-list::-webkit-scrollbar-thumb,
+.activity-list::-webkit-scrollbar-thumb {
+  background: rgba(80, 90, 170, 0.18);
+  border-radius: 10px;
+}
+
+.notice-list::-webkit-scrollbar-track,
+.activity-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .right-column {
+    order: 2;
+  }
+
+  .drives-card {
+    order: 1;
+    margin-bottom: 12px;
+  }
+
+  .dashboard-wrapper {
+    padding: 18px 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .drive-meta {
+    min-width: auto;
+    margin-left: 10px;
+  }
+}

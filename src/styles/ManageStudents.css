@@ -1,0 +1,283 @@
+/* =========================
+   ADMIN TABLE PAGES BASE
+========================= */
+.manage-students {
+  padding: 22px 28px;
+  background: #f6f7ff;
+  min-height: calc(100vh - 40px);
+  color: #1f2b46;
+}
+
+/* HEADER */
+.ms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.ms-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1f2b46;
+}
+
+.ms-header p {
+  margin: 6px 0 0 0;
+  color: #6b7696;
+  font-size: 14px;
+}
+
+/* HEADER ACTIONS */
+.ms-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ms-actions input {
+  padding: 10px 12px;
+  width: 260px;
+  border-radius: 10px;
+  border: 1px solid #dce1ff;
+  outline: none;
+  background: #fff;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ms-actions input:focus {
+  border-color: #9ea9ff;
+  box-shadow: 0 0 0 4px rgba(74, 96, 255, 0.12);
+}
+
+.ms-actions button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  background: #3b4bdd;
+  color: #fff;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ms-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(59, 75, 221, 0.25);
+}
+
+/* CARD */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(60, 70, 140, 0.08);
+  padding: 14px;
+  overflow: hidden;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead th {
+  text-align: left;
+  padding: 12px 12px;
+  background: #f2f4ff;
+  color: #2a3664;
+  font-weight: 800;
+  border-bottom: 1px solid #e8ebff;
+  user-select: none;
+}
+
+thead th:hover {
+  background: #eef1ff;
+}
+
+tbody td {
+  padding: 12px 12px;
+  border-bottom: 1px solid #f0f2ff;
+  color: #3a4668;
+}
+
+tbody tr:hover {
+  background: #fbfbff;
+}
+
+/* EDIT ROW */
+.edit-row td {
+  background: #fdfdff;
+}
+
+.edit-row input,
+.edit-row select {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid #dce1ff;
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.edit-row input:focus,
+.edit-row select:focus {
+  border-color: #9ea9ff;
+  box-shadow: 0 0 0 4px rgba(74, 96, 255, 0.12);
+}
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+}
+
+.badge.active {
+  background: #eaf3ff;
+  color: #1f66ff;
+}
+
+.badge.inactive {
+  background: #fff0f0;
+  color: #d0342c;
+}
+
+.badge.open {
+  background: #eaf3ff;
+  color: #1f66ff;
+}
+
+.badge.closed {
+  background: #fff0f0;
+  color: #d0342c;
+}
+
+/* ACTION BUTTONS */
+.btn-edit,
+.btn-delete,
+.btn-save,
+.btn-cancel {
+  padding: 7px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 13px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-edit {
+  background: #eef1ff;
+  color: #2b3aa8;
+  margin-right: 8px;
+}
+
+.btn-edit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(80, 90, 170, 0.15);
+}
+
+.btn-delete {
+  background: #fff0f0;
+  color: #d0342c;
+}
+
+.btn-delete:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(208, 52, 44, 0.14);
+}
+
+.btn-save {
+  background: #3b4bdd;
+  color: #fff;
+  margin-right: 8px;
+}
+
+.btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(59, 75, 221, 0.25);
+}
+
+.btn-cancel {
+  background: #f0f2ff;
+  color: #4a567a;
+}
+
+.btn-cancel:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(120, 130, 180, 0.12);
+}
+
+/* EMPTY STATE */
+.empty {
+  padding: 18px;
+  text-align: center;
+  color: #7b85a5;
+  font-weight: 700;
+}
+
+.muted {
+  color: #8a93b1;
+  font-weight: 700;
+}
+
+/* PAGINATION */
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #dce1ff;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  color: #2a3664;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.pagination button:hover {
+  background: #f0f2ff;
+  transform: translateY(-1px);
+}
+
+.pagination button.active {
+  background: #3b4bdd;
+  color: white;
+  border-color: #3b4bdd;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .ms-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ms-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ms-actions input {
+    width: 100%;
+  }
+}

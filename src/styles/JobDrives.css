@@ -1,0 +1,183 @@
+.jobdrives-wrapper {
+  padding: 20px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #3b4bdd;
+  margin-bottom: 20px;
+}
+
+/* ---------------------------------------------------------
+   GRID
+--------------------------------------------------------- */
+.jobdrives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* ---------------------------------------------------------
+   JOB CARD
+--------------------------------------------------------- */
+.job-card {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 14px rgba(0,0,0,0.1);
+  border-left: 6px solid #4b5fff;
+  transition: 0.25s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Card Header */
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.company {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.role {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 6px 0;
+  color: #2f3a7a;
+}
+
+.drive-date {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+/* ---------------------------------------------------------
+   STATUS BADGES
+--------------------------------------------------------- */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.open {
+  background: #d9ffe2;
+  color: #137a37;
+}
+
+.closed {
+  background: #ffd6d6;
+  color: #b70000;
+}
+
+/* ---------------------------------------------------------
+   BUTTONS
+--------------------------------------------------------- */
+.details-btn {
+  width: 48%;
+  background: #4b5fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.details-btn:hover {
+  background: #394ad6;
+}
+
+.apply-btn {
+  width: 48%;
+  background: #27ae60;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.apply-btn:hover {
+  background: #1e8f50;
+}
+
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+/* ---------------------------------------------------------
+   MODAL
+--------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-box {
+  width: 450px;
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  animation: popIn 0.25s ease;
+}
+
+.modal-box h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.modal-box p {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+.close-btn {
+  margin-top: 18px;
+  width: 100%;
+  background: #ff4b4b;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #d93636;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

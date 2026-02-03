@@ -1,0 +1,715 @@
+.home-wrapper {
+  min-height: 100vh;
+  background: #f5f6f8;
+}
+
+/* ===== HEADER ===== */
+.top-header {
+  background: white;
+  border-bottom: 2px solid #0b4f7c;
+}
+
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.college-logo {
+  width: 100px;
+}
+
+.mini-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0b4f7c;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.college-title {
+  font-size: 38px;
+  font-weight: 900;
+  color: #0b4f7c;
+  margin: 2px 0;
+  line-height: 1.1;
+}
+
+.sub-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.tagline {
+  font-size: 20px;
+  font-weight: 900;
+  color: #a67719;
+  margin: 6px 0 0 0;
+  line-height: 1.2;
+}
+
+.header-right p {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ===== NAVBAR ===== */
+.main-navbar {
+  background: #0b4f7c;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  padding: 12px 0;
+  margin: 0;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ✅ DROPDOWN FIX (REQUIRED) */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.arrow {
+  font-size: 12px;
+  margin-top: 1px;
+}
+
+/* dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  width: 230px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: none;
+  z-index: 999;
+}
+
+.dropdown-menu button {
+  width: 100%;
+  padding: 12px 14px;
+  text-align: left;
+  border: none;
+  background: white;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown-menu button:hover {
+  background: #0b4f7c;
+  color: white;
+}
+
+/* show dropdown on hover */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* ===== HERO ===== */
+.hero-section {
+  height: 70vh;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-overlay {
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+}
+
+.hero-content {
+  color: white;
+}
+
+.hero-content h1 {
+  font-size: 46px;
+  font-weight: 900;
+}
+
+.hero-content span {
+  text-decoration: underline;
+}
+
+.hero-content h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.hero-content p {
+  max-width: 650px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.btn-light {
+  background: white;
+  color: #0b4f7c;
+  padding: 10px 18px;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.btn-outline {
+  border: 2px solid white;
+  color: white;
+  padding: 10px 18px;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+/* ===== SECTION COMMON ===== */
+.section-box {
+  padding: 60px 0;
+  background: #f5f6f8;
+}
+
+.section-content {
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-weight: 900;
+  color: #0b4f7c;
+  margin-bottom: 12px;
+}
+
+.section-text {
+  font-weight: 600;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* ===== DEPARTMENTS GRID (OLD) ===== */
+.dept-grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.dept-card {
+  background: #f5f6f8;
+  border-radius: 12px;
+  padding: 18px;
+  border-left: 5px solid #0b4f7c;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dept-card h4 {
+  font-weight: 900;
+  margin-bottom: 8px;
+  color: #0b4f7c;
+}
+
+.dept-card p {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== FOOTER ===== */
+.home-footer {
+  background: white;
+  text-align: center;
+  padding: 15px;
+  font-weight: 800;
+  color: #0b4f7c;
+}
+
+/* ✅ FULL PAGE ABOUT DESIGN */
+.about-fullpage {
+  min-height: calc(100vh - 140px);
+  background: #f5f6f8;
+  padding: 45px 0;
+  display: flex;
+  align-items: center;
+}
+
+.about-wrap {
+  width: 100%;
+}
+
+.about-top {
+  background: white;
+  padding: 26px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.about-top h1 {
+  color: #0b4f7c;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.about-top p {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* 3 cards */
+.about-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.about-info-card {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #0b4f7c;
+}
+
+.about-info-card h3 {
+  font-weight: 900;
+  color: #0b4f7c;
+  margin-bottom: 10px;
+}
+
+.about-info-card p {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* 2 panels */
+.about-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.about-panel {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.about-panel h2 {
+  font-weight: 900;
+  color: #0b4f7c;
+  margin-bottom: 12px;
+}
+
+.about-panel ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.about-panel li {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* portal box */
+.about-portal-box {
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.about-portal-box h2 {
+  font-weight: 900;
+  color: #0b4f7c;
+  margin-bottom: 8px;
+}
+
+.about-portal-box p {
+  font-weight: 600;
+  color: #333;
+  line-height: 1.7;
+}
+
+/* Student flow only */
+.portal-flow {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.flow-card {
+  background: #f5f6f8;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.flow-card h4 {
+  color: #0b4f7c;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.flow-card p {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* footer note */
+.about-footer-note {
+  background: #0b4f7c;
+  color: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.about-footer-note h2 {
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.about-footer-note p {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+/* ✅ FULL PAGE DEPARTMENTS DESIGN */
+.dept-fullpage {
+  min-height: calc(100vh - 140px);
+  background: #f5f6f8;
+  padding: 45px 0;
+  display: flex;
+  align-items: center;
+}
+
+.dept-wrap {
+  width: 100%;
+}
+
+.dept-top {
+  background: white;
+  padding: 26px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.dept-top h1 {
+  color: #0b4f7c;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.dept-top p {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* Overview Cards */
+.dept-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.dept-overview-card {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-top: 5px solid #0b4f7c;
+}
+
+.dept-overview-card h3 {
+  font-weight: 900;
+  color: #0b4f7c;
+  margin-bottom: 8px;
+}
+
+.dept-overview-card p {
+  margin: 0 0 12px 0;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.6;
+}
+
+.dept-view-btn {
+  border: none;
+  background: #0b4f7c;
+  color: white;
+  font-weight: 800;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.dept-view-btn:hover {
+  opacity: 0.92;
+}
+
+/* Faculty Section */
+.faculty-section {
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.faculty-section h2 {
+  font-weight: 900;
+  color: #0b4f7c;
+  margin-bottom: 8px;
+}
+
+.faculty-desc {
+  margin: 0 0 16px 0;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.7;
+}
+
+.faculty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.faculty-card {
+  background: #f5f6f8;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.faculty-card h4 {
+  font-weight: 900;
+  color: #0b4f7c;
+  margin-bottom: 10px;
+}
+
+.faculty-card ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.faculty-card li {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Final Note */
+.dept-footer-note {
+  background: #0b4f7c;
+  color: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dept-footer-note h2 {
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.dept-footer-note p {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+/* ✅ RESPONSIVE */
+@media (max-width: 992px) {
+  .about-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .about-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .dept-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .faculty-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .header-right {
+    display: none;
+  }
+
+  .hero-content h1 {
+    font-size: 32px;
+  }
+
+  .hero-content h2 {
+    font-size: 22px;
+  }
+}
+
+/* ✅ PLACED STUDENTS PAGE */
+.placed-fullpage {
+  min-height: calc(100vh - 140px);
+  background: #f5f6f8;
+  padding: 45px 0;
+  display: flex;
+  align-items: center;
+}
+
+.placed-wrap {
+  width: 100%;
+}
+
+.placed-top {
+  background: white;
+  padding: 26px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.placed-top h1 {
+  color: #0b4f7c;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.placed-top p {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.7;
+  color: #333;
+}
+
+.placed-table-box {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.placed-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.placed-table th {
+  background: #0b4f7c;
+  color: white;
+  text-align: left;
+  padding: 14px;
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.placed-table th:hover {
+  background: #0b4f7c !important;
+}
+
+.placed-table th:active,
+.placed-table th:focus {
+  background: #0b4f7c !important;
+  outline: none !important;
+}
+
+.placed-table td {
+  padding: 14px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #333;
+}
+
+/* ✅ Removed hover highlight */
+.placed-table tbody tr:hover {
+  background: transparent;
+}
+
+/* ✅ Remove highlight/selection */
+.placed-table th,
+.placed-table td {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.placed-table th:focus,
+.placed-table td:focus {
+  outline: none;
+}
+
+.placed-table ::selection {
+  background: transparent;
+}

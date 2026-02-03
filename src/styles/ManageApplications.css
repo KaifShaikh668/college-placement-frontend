@@ -1,0 +1,59 @@
+.manage-applications {
+  padding: 30px;
+}
+
+.ma-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ma-header h2 {
+  font-size: 34px;
+  font-weight: 700;
+  margin: 0;
+  color: #1f2d5a;
+}
+
+.ma-header p {
+  margin: 5px 0 0;
+  color: #555;
+}
+
+.table-container {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.applications-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.applications-table th {
+  text-align: left;
+  padding: 14px;
+  color: #1f2d5a;
+  font-weight: 600;
+  background: #f6f8ff;
+}
+
+.applications-table td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.applications-table tr:hover {
+  background: #fafcff;
+}
+
+.status-select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}

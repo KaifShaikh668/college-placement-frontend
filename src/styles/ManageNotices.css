@@ -1,0 +1,117 @@
+.manage-notices {
+  padding: 18px;
+}
+
+.mn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.mn-header h2 {
+  margin: 0;
+  color: #1f2a6b;
+}
+
+.mn-header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.btn-add {
+  background: #4b5fff;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #f0f2ff;
+}
+
+th {
+  background: #f6f8ff;
+  color: #2b358f;
+  text-align: left;
+}
+
+.edit-row input {
+  width: 100%;
+  padding: 6px;
+}
+
+.btn-edit {
+  background: #4b5fff;
+  color: #fff;
+  border: none;
+  padding: 6px 8px;
+  margin-right: 6px;
+  border-radius: 6px;
+}
+
+.btn-delete {
+  background: #ff4d4d;
+  color: #fff;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.btn-save {
+  background: #2e7d32;
+  color: #fff;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  margin-right: 6px;
+}
+
+.btn-cancel {
+  background: #e0e0e0;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.view-only {
+  color: #888;
+  font-size: 13px;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 18px;
+}
+
+.pagination {
+  margin-top: 14px;
+  display: flex;
+  gap: 6px;
+}
+
+.pagination button {
+  padding: 6px 10px;
+}
+
+.pagination .active {
+  background: #4b5fff;
+  color: #fff;
+}
