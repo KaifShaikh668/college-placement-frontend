@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/ManageDrives.css";
 
@@ -16,13 +16,11 @@ export default function ManageDrives() {
   const token = localStorage.getItem("adminToken");
 
   /* =========================
-     FETCH DRIVES
+     FETCH DRIVES (FIXED)
   ========================= */
-  useEffect(() => {
-    if (token) fetchDrives();
-  }, [token]);
+  const fetchDrives = useCallback(async () => {
+    if (!token) return;
 
-  const fetchDrives = async () => {
     try {
       const res = await axios.get(
         "http://localhost:5002/api/jobs/admin",
@@ -35,7 +33,11 @@ export default function ManageDrives() {
       console.error(error);
       alert("Failed to load job drives");
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchDrives();
+  }, [fetchDrives]);
 
   /* =========================
      ACTIONS
