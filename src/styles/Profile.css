@@ -267,3 +267,9 @@
     grid-template-columns: 1fr;
   }
 }
+.portal-card input:disabled,
+.portal-card select:disabled {
+  background-color: #f5f6fa;
+  cursor: not-allowed;
+  opacity: 1;
+}

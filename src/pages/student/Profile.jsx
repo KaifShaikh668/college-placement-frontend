@@ -5,10 +5,8 @@ import "../../styles/Profile.css";
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState("personal");
-
   const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
   const [form, setForm] = useState({
     gender: "",
@@ -37,17 +35,14 @@ export default function Profile() {
         gender: res.data?.profile?.gender || "",
         dob: res.data?.profile?.dob || "",
         aadhaar: res.data?.profile?.aadhaar || "",
-
         street: res.data?.profile?.address?.street || "",
         city: res.data?.profile?.address?.city || "",
         state: res.data?.profile?.address?.state || "",
         pincode: res.data?.profile?.address?.pincode || "",
-
         ssc: res.data?.profile?.academics?.ssc || "",
         hsc: res.data?.profile?.academics?.hsc || "",
         graduation: res.data?.profile?.academics?.graduation || "",
         cgpa: res.data?.profile?.academics?.cgpa || "",
-
         resumeName: res.data?.profile?.resumeName || "",
         profilePic: res.data?.profile?.profilePic || "",
       });
@@ -63,79 +58,11 @@ export default function Profile() {
     fetchStudentProfile();
   }, []);
 
-  /* ---------------- HANDLE INPUT ---------------- */
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (["ssc", "hsc", "cgpa"].includes(name)) {
-      if (!/^[0-9]*$/.test(value)) return;
-    }
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  /* ---------------- PROFILE PIC UPLOAD (DB) ---------------- */
-  const handleProfilePic = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setForm((prev) => ({
-        ...prev,
-        profilePic: reader.result,
-      }));
-    };
-    reader.readAsDataURL(file);
-  };
-
-  /* ---------------- RESUME UPLOAD ---------------- */
-  const handleResumeUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (file.type !== "application/pdf") {
-      alert("Upload PDF only.");
-      return;
-    }
-
-    setForm((prev) => ({
-      ...prev,
-      resumeName: file.name,
-    }));
-  };
-
-  /* ---------------- VALIDATION ---------------- */
-  const errors = useMemo(() => {
-    return {
-      aadhaar:
-        form.aadhaar && form.aadhaar.length !== 12
-          ? "Aadhaar must be 12 digits"
-          : "",
-      pincode:
-        form.pincode && form.pincode.length !== 6
-          ? "Pincode must be 6 digits"
-          : "",
-    };
-  }, [form.aadhaar, form.pincode]);
-
   /* ---------------- PROFILE COMPLETION ---------------- */
   const completion = useMemo(() => {
     const fieldsToCount = [
-      "gender",
-      "dob",
-      "aadhaar",
-      "street",
-      "city",
-      "state",
-      "pincode",
-      "ssc",
-      "hsc",
-      "graduation",
-      "cgpa",
+      "gender","dob","aadhaar","street","city","state",
+      "pincode","ssc","hsc","graduation","cgpa",
     ];
 
     const total = fieldsToCount.length;
@@ -146,48 +73,6 @@ export default function Profile() {
     return Math.round((filled / total) * 100);
   }, [form]);
 
-  /* ---------------- SAVE TO DB ---------------- */
-  const saveProfile = async () => {
-    if (errors.aadhaar || errors.pincode) {
-      alert("Please fix the errors before saving.");
-      return;
-    }
-
-    try {
-      setSaving(true);
-
-      await API.put("/student/me", {
-        gender: form.gender,
-        dob: form.dob,
-        aadhaar: form.aadhaar,
-
-        street: form.street,
-        city: form.city,
-        state: form.state,
-        pincode: form.pincode,
-
-        ssc: form.ssc,
-        hsc: form.hsc,
-        graduation: form.graduation,
-        cgpa: form.cgpa,
-
-        resumeName: form.resumeName,
-        profilePic: form.profilePic,
-      });
-
-      localStorage.setItem("profileCompletion", completion);
-
-      alert("✅ Profile updated successfully!");
-      fetchStudentProfile();
-    } catch (err) {
-      console.error("Profile update failed:", err);
-      alert("❌ Failed to save profile");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  /* ---------------- LISTS ---------------- */
   const allStates = [
     "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa",
     "Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala",
@@ -219,17 +104,16 @@ export default function Profile() {
   return (
     <StudentLayout>
       <div className="profile-wrapper">
-        {/* ✅ PORTAL HEADER CARD */}
+
+        {/* HEADER */}
         <div className="portal-top-card">
           <div className="portal-left">
-            <label className="portal-avatar">
+            <div className="portal-avatar">
               <img
                 src={form.profilePic || "/default-avatar.png"}
                 alt="profile"
               />
-              <input type="file" accept="image/*" onChange={handleProfilePic} />
-              <span className="avatar-edit">Change</span>
-            </label>
+            </div>
 
             <div className="portal-basic">
               <h2 className="portal-name">{studentData?.name || "Student"}</h2>
@@ -256,17 +140,13 @@ export default function Profile() {
                 style={{ width: `${completion}%` }}
               />
             </div>
-            <button
-              className="portal-save-btn"
-              onClick={saveProfile}
-              disabled={saving}
-            >
-              {saving ? "Saving..." : "Save Profile"}
+            <button className="portal-save-btn" disabled>
+              View Only
             </button>
           </div>
         </div>
 
-        {/* ✅ PORTAL TABS */}
+        {/* TABS */}
         <div className="portal-tabs">
           <button
             className={activeTab === "personal" ? "ptab active" : "ptab"}
@@ -288,150 +168,102 @@ export default function Profile() {
           </button>
         </div>
 
-        {/* ✅ PERSONAL DETAILS */}
+        {/* PERSONAL */}
         {activeTab === "personal" && (
           <div className="portal-card">
             <h3 className="portal-title">Personal Details</h3>
-
             <div className="portal-grid">
+
               <div className="portal-field">
                 <label>Gender</label>
-                <select name="gender" value={form.gender} onChange={handleChange}>
-                  <option value="">Select</option>
-                  <option>Male</option>
-                  <option>Female</option>
+                <select value={form.gender} disabled>
+                  <option>{form.gender || "Not Provided"}</option>
                 </select>
               </div>
 
               <div className="portal-field">
                 <label>Date of Birth</label>
-                <input
-                  type="date"
-                  name="dob"
-                  value={form.dob}
-                  max={new Date().toISOString().split("T")[0]}
-                  onChange={handleChange}
-                />
+                <input type="date" value={form.dob} disabled />
               </div>
 
               <div className="portal-field">
                 <label>Aadhaar Number</label>
-                <input
-                  name="aadhaar"
-                  maxLength="12"
-                  value={form.aadhaar}
-                  onChange={handleChange}
-                />
-                {errors.aadhaar && <p className="error">{errors.aadhaar}</p>}
+                <input value={form.aadhaar} disabled />
               </div>
+
             </div>
           </div>
         )}
 
-        {/* ✅ ADDRESS DETAILS */}
+        {/* ADDRESS */}
         {activeTab === "address" && (
           <div className="portal-card">
             <h3 className="portal-title">Address Details</h3>
-
             <div className="portal-grid">
+
               <div className="portal-field">
                 <label>Permanent Address</label>
-                <input
-                  name="street"
-                  value={form.street}
-                  onChange={handleChange}
-                />
+                <input value={form.street} disabled />
               </div>
 
               <div className="portal-field">
                 <label>City</label>
-                <input name="city" value={form.city} onChange={handleChange} />
+                <input value={form.city} disabled />
               </div>
 
               <div className="portal-field">
                 <label>State</label>
-                <select name="state" value={form.state} onChange={handleChange}>
-                  <option value="">Select State</option>
-                  {allStates.map((s) => (
-                    <option key={s}>{s}</option>
-                  ))}
+                <select value={form.state} disabled>
+                  <option>{form.state || "Not Provided"}</option>
                 </select>
               </div>
 
               <div className="portal-field">
                 <label>Pincode</label>
-                <input
-                  name="pincode"
-                  maxLength="6"
-                  value={form.pincode}
-                  onChange={handleChange}
-                />
-                {errors.pincode && <p className="error">{errors.pincode}</p>}
+                <input value={form.pincode} disabled />
               </div>
+
             </div>
           </div>
         )}
 
-        {/* ✅ ACADEMIC DETAILS */}
+        {/* ACADEMICS */}
         {activeTab === "academics" && (
           <div className="portal-card">
             <h3 className="portal-title">Academic Details</h3>
-
             <div className="portal-grid">
+
               <div className="portal-field">
                 <label>SSC Percentage</label>
-                <input
-                  name="ssc"
-                  maxLength="3"
-                  value={form.ssc}
-                  onChange={handleChange}
-                />
+                <input value={form.ssc} disabled />
               </div>
 
               <div className="portal-field">
                 <label>HSC Percentage</label>
-                <input
-                  name="hsc"
-                  maxLength="3"
-                  value={form.hsc}
-                  onChange={handleChange}
-                />
+                <input value={form.hsc} disabled />
               </div>
 
               <div className="portal-field">
                 <label>Graduation Course</label>
-                <select
-                  name="graduation"
-                  value={form.graduation}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Course</option>
-                  {graduationCourses.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
+                <select value={form.graduation} disabled>
+                  <option>{form.graduation || "Not Provided"}</option>
                 </select>
               </div>
 
               <div className="portal-field">
                 <label>CGPA / Percentage</label>
-                <input
-                  name="cgpa"
-                  maxLength="3"
-                  value={form.cgpa}
-                  onChange={handleChange}
-                />
+                <input value={form.cgpa} disabled />
               </div>
 
               <div className="portal-field">
-                <label>Upload Resume (PDF)</label>
-                <input type="file" accept=".pdf" onChange={handleResumeUpload} />
-                {form.resumeName && (
-                  <p className="resume-preview">Uploaded: {form.resumeName}</p>
-                )}
+                <label>Resume</label>
+                <input value={form.resumeName || "Not Uploaded"} disabled />
               </div>
+
             </div>
           </div>
         )}
+
       </div>
     </StudentLayout>
   );
