@@ -26,7 +26,7 @@ export default function StudentLogin() {
   /* ---------------- VALIDATIONS ---------------- */
   const emailValid = useMemo(() => {
     const val = regEmail.trim();
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return val.length > 0 && regex.test(val);
   }, [regEmail]);
 
@@ -121,7 +121,6 @@ export default function StudentLogin() {
       alert("Registration Successful!");
       setActiveTab("login");
 
-      // reset fields
       setRegEmail("");
       setRegStudentId("");
       setRegPassword("");
@@ -140,7 +139,6 @@ export default function StudentLogin() {
         <h1 className="project-title">Welcome to College Placement Cell</h1>
 
         <div className="auth-card shadow">
-          {/* ✅ Tabs */}
           <div className="tab-container">
             <button
               className={activeTab === "login" ? "tab active" : "tab"}
@@ -159,7 +157,6 @@ export default function StudentLogin() {
             </button>
           </div>
 
-          {/* ✅ LOGIN FORM */}
           {activeTab === "login" && (
             <div className="form-area">
               <h3 className="text-center">Student Login</h3>
@@ -206,12 +203,10 @@ export default function StudentLogin() {
             </div>
           )}
 
-          {/* ✅ REGISTER FORM */}
           {activeTab === "register" && (
             <div className="form-area">
               <h3 className="text-center">Student Registration</h3>
 
-              {/* EMAIL + STATUS */}
               <div className="input-with-status">
                 <input
                   type="text"
@@ -228,7 +223,6 @@ export default function StudentLogin() {
                 )}
               </div>
 
-              {/* STUDENT ID + STATUS */}
               <div className="input-with-status">
                 <input
                   type="text"
@@ -252,7 +246,6 @@ export default function StudentLogin() {
                 )}
               </div>
 
-              {/* PASSWORD + STATUS */}
               <div className="password-wrapper input-with-status">
                 <input
                   type={showRegPass ? "text" : "password"}
@@ -282,7 +275,6 @@ export default function StudentLogin() {
                 )}
               </div>
 
-              {/* CONFIRM PASSWORD + STATUS */}
               <div className="password-wrapper input-with-status">
                 <input
                   type={showRegConfirmPass ? "text" : "password"}
