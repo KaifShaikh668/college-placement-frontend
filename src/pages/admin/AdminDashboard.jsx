@@ -1,6 +1,6 @@
 // -------------------- IMPORTS --------------------
 import React, { useEffect, useState } from "react";
-import API from "../../api"; // ✅ CHANGED (using your API file)
+import API from "../../utils/api"; // ✅ CHANGED (using your API file)
 import {
   BarChart,
   Bar,
