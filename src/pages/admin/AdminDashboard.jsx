@@ -1,6 +1,6 @@
 // -------------------- IMPORTS --------------------
 import React, { useEffect, useState } from "react";
-import API from "../../utils/api"; // ✅ CHANGED (using your API file)
+import API from "../../utils/api";
 import {
   BarChart,
   Bar,
@@ -12,14 +12,6 @@ import {
 } from "recharts";
 import "../../styles/AdminDashboard.css";
 
-// -------------------- STATIC CHART DATA --------------------
-const chartData = [
-  { name: "Jan", students: 40 },
-  { name: "Feb", students: 55 },
-  { name: "Mar", students: 75 },
-  { name: "Apr", students: 60 },
-];
-
 // -------------------- COMPONENT --------------------
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
@@ -27,7 +19,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await API.get("/admin/stats"); // ✅ CHANGED
+        const res = await API.get("/admin/stats");
         setStats(res.data);
       } catch (error) {
         console.error("Failed to load admin stats", error);
@@ -36,6 +28,9 @@ export default function AdminDashboard() {
 
     fetchStats();
   }, []);
+
+  // ✅ Dynamic chart data from backend
+  const chartData = stats?.monthlyData || [];
 
   return (
     <div className="admin-dashboard">
