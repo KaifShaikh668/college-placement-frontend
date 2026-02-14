@@ -23,6 +23,8 @@ export default function StudentLogin() {
   const [showRegPass, setShowRegPass] = useState(false);
   const [showRegConfirmPass, setShowRegConfirmPass] = useState(false);
 
+  const [formErrors, setFormErrors] = useState({});
+
   /* ---------------- VALIDATIONS ---------------- */
   const emailValid = useMemo(() => {
     const val = regEmail.trim();
@@ -55,7 +57,6 @@ export default function StudentLogin() {
     const password = loginPassword.trim();
 
     if (!email || !password) {
-      alert("All fields are required");
       return;
     }
 
@@ -73,7 +74,7 @@ export default function StudentLogin() {
 
       navigate("/student/dashboard");
     } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -86,30 +87,28 @@ export default function StudentLogin() {
     const password = regPassword.trim();
     const confirmPassword = regConfirmPassword.trim();
 
-    if (!email || !studentId || !password || !confirmPassword) {
-      alert("All fields are required");
-      return;
-    }
+    let errors = {};
 
-    if (!emailValid) {
-      alert("Enter a valid email address");
-      return;
-    }
+    if (!email) errors.email = "Email is required";
+    else if (!emailValid) errors.email = "Enter a valid email address";
 
-    if (!studentIdValid) {
-      alert("Student ID must be exactly 7 digits");
-      return;
-    }
+    if (!studentId) errors.studentId = "Student ID is required";
+    else if (!studentIdValid)
+      errors.studentId = "Student ID must be exactly 7 digits";
 
-    if (!passwordValid) {
-      alert("Password must be minimum 6 characters and contain letters + numbers");
-      return;
-    }
+    if (!password) errors.password = "Password is required";
+    else if (!passwordValid)
+      errors.password =
+        "Password must be minimum 6 characters with letters & numbers";
 
-    if (!confirmPasswordValid) {
-      alert("Passwords do not match");
-      return;
-    }
+    if (!confirmPassword)
+      errors.confirmPassword = "Please confirm your password";
+    else if (!confirmPasswordValid)
+      errors.confirmPassword = "Passwords do not match";
+
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length > 0) return;
 
     try {
       await axios.post("http://localhost:5002/api/auth/register", {
@@ -118,7 +117,6 @@ export default function StudentLogin() {
         password,
       });
 
-      alert("Registration Successful!");
       setActiveTab("login");
 
       setRegEmail("");
@@ -127,8 +125,11 @@ export default function StudentLogin() {
       setRegConfirmPassword("");
       setShowRegPass(false);
       setShowRegConfirmPass(false);
+      setFormErrors({});
     } catch (error) {
-      alert(error.response?.data?.message || "Registration failed");
+      setFormErrors({
+        general: error.response?.data?.message || "Registration failed",
+      });
     }
   };
 
@@ -215,13 +216,19 @@ export default function StudentLogin() {
                   value={regEmail}
                   onChange={(e) => setRegEmail(e.target.value)}
                 />
-
                 {regEmail.trim().length > 0 && (
-                  <span className={`status-icon ${emailValid ? "valid" : "invalid"}`}>
+                  <span
+                    className={`status-icon ${
+                      emailValid ? "valid" : "invalid"
+                    }`}
+                  >
                     {emailValid ? "✓" : "✕"}
                   </span>
                 )}
               </div>
+              {formErrors.email && (
+                <p className="error-message">{formErrors.email}</p>
+              )}
 
               <div className="input-with-status">
                 <input
@@ -234,7 +241,6 @@ export default function StudentLogin() {
                   }
                   maxLength={7}
                 />
-
                 {regStudentId.trim().length > 0 && (
                   <span
                     className={`status-icon ${
@@ -245,6 +251,9 @@ export default function StudentLogin() {
                   </span>
                 )}
               </div>
+              {formErrors.studentId && (
+                <p className="error-message">{formErrors.studentId}</p>
+              )}
 
               <div className="password-wrapper input-with-status">
                 <input
@@ -254,7 +263,6 @@ export default function StudentLogin() {
                   value={regPassword}
                   onChange={(e) => setRegPassword(e.target.value)}
                 />
-
                 <button
                   type="button"
                   className="show-hide-btn"
@@ -262,7 +270,6 @@ export default function StudentLogin() {
                 >
                   {showRegPass ? "Hide" : "Show"}
                 </button>
-
                 {regPassword.trim().length > 0 && (
                   <span
                     className={`status-icon ${
@@ -274,6 +281,9 @@ export default function StudentLogin() {
                   </span>
                 )}
               </div>
+              {formErrors.password && (
+                <p className="error-message">{formErrors.password}</p>
+              )}
 
               <div className="password-wrapper input-with-status">
                 <input
@@ -283,15 +293,15 @@ export default function StudentLogin() {
                   value={regConfirmPassword}
                   onChange={(e) => setRegConfirmPassword(e.target.value)}
                 />
-
                 <button
                   type="button"
                   className="show-hide-btn"
-                  onClick={() => setShowRegConfirmPass(!showRegConfirmPass)}
+                  onClick={() =>
+                    setShowRegConfirmPass(!showRegConfirmPass)
+                  }
                 >
                   {showRegConfirmPass ? "Hide" : "Show"}
                 </button>
-
                 {regConfirmPassword.trim().length > 0 && (
                   <span
                     className={`status-icon ${
@@ -303,6 +313,17 @@ export default function StudentLogin() {
                   </span>
                 )}
               </div>
+              {formErrors.confirmPassword && (
+                <p className="error-message">
+                  {formErrors.confirmPassword}
+                </p>
+              )}
+
+              {formErrors.general && (
+                <p className="error-message text-center">
+                  {formErrors.general}
+                </p>
+              )}
 
               <button className="success-btn w-100" onClick={handleRegister}>
                 Register
