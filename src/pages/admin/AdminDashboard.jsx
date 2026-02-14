@@ -1,6 +1,6 @@
 // -------------------- IMPORTS --------------------
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../../api"; // ✅ CHANGED (using your API file)
 import {
   BarChart,
   Bar,
@@ -27,17 +27,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem("adminToken");
-
-        if (!token) {
-          console.error("Admin token not found");
-          return;
-        }
-
-        const res = await axios.get("http://localhost:5002/api/admin/stats", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
+        const res = await API.get("/admin/stats"); // ✅ CHANGED
         setStats(res.data);
       } catch (error) {
         console.error("Failed to load admin stats", error);
