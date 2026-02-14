@@ -12,15 +12,16 @@ import {
 } from "recharts";
 import "../../styles/AdminDashboard.css";
 
-// -------------------- COMPONENT --------------------
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const res = await API.get("/admin/stats");
         setStats(res.data);
+        setChartData(res.data.monthlyRegistrations || []);
       } catch (error) {
         console.error("Failed to load admin stats", error);
       }
@@ -28,9 +29,6 @@ export default function AdminDashboard() {
 
     fetchStats();
   }, []);
-
-  // ✅ Dynamic chart data from backend
-  const chartData = stats?.monthlyData || [];
 
   return (
     <div className="admin-dashboard">
