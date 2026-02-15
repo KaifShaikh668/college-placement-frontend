@@ -34,6 +34,7 @@ export default function AdminDashboard() {
     <div className="admin-dashboard">
       <h2 className="admin-title">Admin Dashboard</h2>
 
+      {/* -------------------- STATS CARDS -------------------- */}
       <div className="admin-stats-row">
         <div className="admin-stat-card">
           <h3>{stats?.totalStudents ?? 0}</h3>
@@ -56,19 +57,37 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* -------------------- CHART -------------------- */}
       <div className="admin-chart-box">
         <h3 className="chart-title">Monthly Student Registrations</h3>
 
-        <div className="chart-wrapper">
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="students" fill="#4b5fff" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="chart-wrapper" style={{ height: "350px" }}>
+          {chartData.length === 0 ? (
+            <div
+              style={{
+                textAlign: "center",
+                paddingTop: "120px",
+                color: "#888",
+                fontWeight: "500",
+              }}
+            >
+              No registration data available yet.
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Bar
+                  dataKey="students"
+                  fill="#4b5fff"
+                  radius={[8, 8, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
     </div>
