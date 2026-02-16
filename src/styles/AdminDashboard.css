@@ -211,3 +211,67 @@
 .blue-fill { background: #4b5fff; }
 .purple-fill { background: #8e44ff; }
 .orange-fill { background: #ff8c42; }
+.funnel-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.funnel-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.funnel-box {
+  background: #f5f7ff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 120px;
+}
+
+.funnel-box span {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.selected-box {
+  background: #e8f9f0;
+}
+
+.arrow {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.quick-actions {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.action-grid button {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #4b5fff;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.action-grid button:hover {
+  background: #3742fa;
+}

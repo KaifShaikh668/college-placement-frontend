@@ -1,12 +1,14 @@
 // -------------------- IMPORTS --------------------
 import React, { useEffect, useState } from "react";
 import API from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 import "../../styles/AdminDashboard.css";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [recentStudents, setRecentStudents] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const navigate = useNavigate();
 
   const fetchStats = async () => {
     try {
@@ -21,16 +23,16 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchStats();
-
-    const interval = setInterval(() => {
-      fetchStats();
-    }, 10000);
-
+    const interval = setInterval(fetchStats, 10000);
     return () => clearInterval(interval);
   }, []);
 
+  const selectionRate = stats?.selectionRate ?? 0;
+
   return (
     <div className="admin-dashboard">
+
+      {/* Header */}
       <div className="dashboard-header">
         <h2>Admin Dashboard</h2>
         {lastUpdated && (
@@ -40,108 +42,78 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* -------------------- SMART KPI CARDS -------------------- */}
+      {/* ---------------- KPI CARDS ---------------- */}
       <div className="kpi-grid">
+        <div className="kpi-card">
+          <h3>{stats?.totalStudents ?? 0}</h3>
+          <p>Total Students</p>
+        </div>
 
         <div className="kpi-card">
-          <div className="kpi-top">
-            <h2>{stats?.totalStudents ?? 0}</h2>
-            <span className="kpi-badge green">Live</span>
-          </div>
-          <p>Total Students</p>
-          <div className="kpi-progress">
-            <div
-              className="kpi-progress-fill"
-              style={{ width: `${(stats?.totalStudents ?? 0) * 5}%` }}
-            ></div>
-          </div>
+          <h3>{stats?.totalApplications ?? 0}</h3>
+          <p>Total Applications</p>
         </div>
 
-        <div className="kpi-card blue">
-          <div className="kpi-top">
-            <h2>{stats?.totalJobs ?? 0}</h2>
-            <span className="kpi-badge blue-badge">Active</span>
-          </div>
-          <p>Total Companies</p>
-          <div className="kpi-progress">
-            <div
-              className="kpi-progress-fill blue-fill"
-              style={{ width: `${(stats?.totalJobs ?? 0) * 20}%` }}
-            ></div>
-          </div>
-        </div>
-
-        <div className="kpi-card purple">
-          <div className="kpi-top">
-            <h2>{stats?.totalApplications ?? 0}</h2>
-            <span className="kpi-badge purple-badge">Incoming</span>
-          </div>
-          <p>Applications</p>
-          <div className="kpi-progress">
-            <div
-              className="kpi-progress-fill purple-fill"
-              style={{ width: `${(stats?.totalApplications ?? 0) * 3}%` }}
-            ></div>
-          </div>
-        </div>
-
-        <div className="kpi-card orange">
-          <div className="kpi-top">
-            <h2>{stats?.selectedCount ?? 0}</h2>
-            <span className="kpi-badge orange-badge">Selected</span>
-          </div>
+        <div className="kpi-card">
+          <h3>{stats?.selectedCount ?? 0}</h3>
           <p>Selected</p>
-          <div className="kpi-progress">
-            <div
-              className="kpi-progress-fill orange-fill"
-              style={{ width: `${(stats?.selectedCount ?? 0) * 30}%` }}
-            ></div>
-          </div>
         </div>
 
+        <div className="kpi-card highlight">
+          <h3>{selectionRate}%</h3>
+          <p>Selection Rate</p>
+        </div>
       </div>
 
-      {/* -------------------- INFO SECTION -------------------- */}
-      <div className="info-grid">
-        <div className="info-card">
-          <h4>Recent Registrations</h4>
+      {/* ---------------- PLACEMENT FUNNEL ---------------- */}
+      <div className="funnel-section">
+        <h4>Placement Funnel</h4>
 
-          {recentStudents.length === 0 ? (
-            <p className="empty-text">No recent students.</p>
-          ) : (
-            <ul>
-              {recentStudents.map((student, index) => (
-                <li key={index}>
-                  <span className="student-name">{student.name}</span>
-                  <span className="student-dept">{student.department}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="info-card">
-          <h4>Application Summary</h4>
-
-          <div className="summary-row">
-            <span>Total Applications</span>
-            <strong>{stats?.totalApplications ?? 0}</strong>
+        <div className="funnel-row">
+          <div className="funnel-box">
+            <span>{stats?.totalStudents ?? 0}</span>
+            <p>Students</p>
           </div>
 
-          <div className="summary-row">
-            <span>Selected</span>
-            <strong>{stats?.selectedCount ?? 0}</strong>
+          <div className="arrow">→</div>
+
+          <div className="funnel-box">
+            <span>{stats?.totalApplications ?? 0}</span>
+            <p>Applications</p>
           </div>
 
-          <div className="summary-row">
-            <span>Pending</span>
-            <strong>
-              {(stats?.totalApplications ?? 0) -
-                (stats?.selectedCount ?? 0)}
-            </strong>
+          <div className="arrow">→</div>
+
+          <div className="funnel-box selected-box">
+            <span>{stats?.selectedCount ?? 0}</span>
+            <p>Selected</p>
           </div>
         </div>
       </div>
+
+      {/* ---------------- QUICK ACTIONS ---------------- */}
+      <div className="quick-actions">
+        <h4>Quick Actions</h4>
+
+        <div className="action-grid">
+          <button onClick={() => navigate("/admin/students")}>
+            Manage Students
+          </button>
+
+          <button onClick={() => navigate("/admin/drives")}>
+            Manage Drives
+          </button>
+
+          <button onClick={() => navigate("/admin/applications")}>
+            View Applications
+          </button>
+
+          <button onClick={() => navigate("/admin/notices")}>
+            Send Notice
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 }
