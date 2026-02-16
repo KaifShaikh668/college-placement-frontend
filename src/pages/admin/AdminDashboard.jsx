@@ -117,3 +117,33 @@ export default function AdminDashboard() {
     </div>
   );
 }
+{/* -------------------- PLACEMENT FUNNEL -------------------- */}
+<div className="funnel-card">
+  <h4>Placement Funnel</h4>
+
+  <div className="funnel-steps">
+    <div className="funnel-step">
+      <span>Total Students</span>
+      <strong>{stats?.totalStudents ?? 0}</strong>
+    </div>
+
+    <div className="funnel-arrow">→</div>
+
+    <div className="funnel-step">
+      <span>Applications</span>
+      <strong>{stats?.totalApplications ?? 0}</strong>
+    </div>
+
+    <div className="funnel-arrow">→</div>
+
+    <div className="funnel-step highlight">
+      <span>Selected</span>
+      <strong>{stats?.selectedCount ?? 0}</strong>
+    </div>
+  </div>
+
+  <div className="selection-rate">
+    Selection Rate:
+    <strong> {stats?.selectionRate ?? 0}%</strong>
+  </div>
+</div>
