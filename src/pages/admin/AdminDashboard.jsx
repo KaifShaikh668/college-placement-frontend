@@ -1,109 +1,109 @@
 // -------------------- IMPORTS --------------------
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import API from "../../utils/api";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import "../../styles/AdminDashboard.css";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
-  const [chartData, setChartData] = useState([]);
+  const [recentStudents, setRecentStudents] = useState([]);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
-  // -------------------- FETCH FUNCTION --------------------
-  const fetchStats = useCallback(async () => {
+  const fetchStats = async () => {
     try {
       const res = await API.get("/admin/stats");
-
       setStats(res.data);
-
-      // ✅ Safe fallback if backend returns empty or undefined
-      setChartData(
-        res.data?.monthlyRegistrations?.length
-          ? res.data.monthlyRegistrations
-          : [
-              { name: "Jan 2026", students: 2 },
-              { name: "Feb 2026", students: 5 },
-              { name: "Mar 2026", students: 1 },
-            ]
-      );
+      setRecentStudents(res.data.recentStudents || []);
+      setLastUpdated(new Date());
     } catch (error) {
       console.error("Failed to load admin stats", error);
-
-      // Optional fallback on error
-      setChartData([
-        { name: "Jan 2026", students: 2 },
-        { name: "Feb 2026", students: 5 },
-        { name: "Mar 2026", students: 1 },
-      ]);
     }
-  }, []);
+  };
 
-  // -------------------- INITIAL LOAD --------------------
   useEffect(() => {
     fetchStats();
-  }, [fetchStats]);
 
-  // -------------------- AUTO REFRESH EVERY 5 SECONDS --------------------
-  useEffect(() => {
     const interval = setInterval(() => {
       fetchStats();
-    }, 5000);
+    }, 10000); // refresh every 10 seconds
 
     return () => clearInterval(interval);
-  }, [fetchStats]);
+  }, []);
 
   return (
     <div className="admin-dashboard">
-      <h2 className="admin-title">Admin Dashboard</h2>
+      <div className="dashboard-header">
+        <h2>Admin Dashboard</h2>
+        {lastUpdated && (
+          <span className="last-updated">
+            Updated {lastUpdated.toLocaleTimeString()}
+          </span>
+        )}
+      </div>
 
-      {/* -------------------- STATS CARDS -------------------- */}
-      <div className="admin-stats-row">
-        <div className="admin-stat-card">
+      {/* -------------------- KPI CARDS -------------------- */}
+      <div className="kpi-grid">
+        <div className="kpi-card">
           <h3>{stats?.totalStudents ?? 0}</h3>
           <p>Total Students</p>
         </div>
 
-        <div className="admin-stat-card">
+        <div className="kpi-card">
           <h3>{stats?.totalJobs ?? 0}</h3>
           <p>Total Companies</p>
         </div>
 
-        <div className="admin-stat-card">
+        <div className="kpi-card">
           <h3>{stats?.totalApplications ?? 0}</h3>
-          <p>Applications Received</p>
+          <p>Applications</p>
         </div>
 
-        <div className="admin-stat-card">
+        <div className="kpi-card highlight">
           <h3>{stats?.selectedCount ?? 0}</h3>
-          <p>Selected Candidates</p>
+          <p>Selected</p>
         </div>
       </div>
 
-      {/* -------------------- CHART -------------------- */}
-      <div className="admin-chart-box">
-        <h3 className="chart-title">Monthly Student Registrations</h3>
+      {/* -------------------- INFO SECTION -------------------- */}
+      <div className="info-grid">
+        {/* Recent Registrations */}
+        <div className="info-card">
+          <h4>Recent Registrations</h4>
 
-        <div className="chart-wrapper" style={{ height: "350px" }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
-              <Bar
-                dataKey="students"
-                fill="#4b5fff"
-                radius={[8, 8, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          {recentStudents.length === 0 ? (
+            <p className="empty-text">No recent students.</p>
+          ) : (
+            <ul>
+              {recentStudents.map((student, index) => (
+                <li key={index}>
+                  <span className="student-name">{student.name}</span>
+                  <span className="student-dept">{student.department}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Application Summary */}
+        <div className="info-card">
+          <h4>Application Summary</h4>
+
+          <div className="summary-row">
+            <span>Total Applications</span>
+            <strong>{stats?.totalApplications ?? 0}</strong>
+          </div>
+
+          <div className="summary-row">
+            <span>Selected</span>
+            <strong>{stats?.selectedCount ?? 0}</strong>
+          </div>
+
+          <div className="summary-row">
+            <span>Pending</span>
+            <strong>
+              {(stats?.totalApplications ?? 0) -
+                (stats?.selectedCount ?? 0)}
+            </strong>
+          </div>
         </div>
       </div>
     </div>
