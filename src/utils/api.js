@@ -4,14 +4,17 @@ const API = axios.create({
   baseURL: "https://college-placement-backend-fup4.onrender.com/api",
 });
 
-// Attach token properly
 API.interceptors.request.use((req) => {
-  const adminToken = localStorage.getItem("adminToken");
   const studentToken = localStorage.getItem("studentToken");
+  const adminToken = localStorage.getItem("adminToken");
 
+  // ✅ If admin logged in → always send admin token
   if (adminToken) {
     req.headers.Authorization = `Bearer ${adminToken}`;
-  } else if (studentToken) {
+  }
+
+  // ✅ Otherwise send student token
+  else if (studentToken) {
     req.headers.Authorization = `Bearer ${studentToken}`;
   }
 
