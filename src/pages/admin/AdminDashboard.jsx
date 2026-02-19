@@ -81,22 +81,50 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Recent Applications */}
-      <div className="activity-section">
-        <h4>Recent Applications</h4>
+      {/* Placement Insights */}
+      <div className="insights-section">
+        <h4>Placement Insights</h4>
 
-        {!stats?.recentApplications ||
-        stats.recentApplications.length === 0 ? (
-          <p className="empty-text">No recent applications.</p>
-        ) : (
-          <ul className="activity-list">
-            {stats.recentApplications.map((app, index) => (
-              <li key={index} className="activity-item">
-                Application ID: {app._id} — Status: {app.status}
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="insights-grid">
+
+          <div className="insight-card">
+            <p>Applications per Student</p>
+            <h3>
+              {stats?.totalStudents > 0
+                ? (stats.totalApplications / stats.totalStudents).toFixed(2)
+                : 0}
+            </h3>
+          </div>
+
+          <div className="insight-card">
+            <p>Conversion Ratio</p>
+            <h3>
+              {stats?.totalApplications > 0
+                ? (stats.selectedCount / stats.totalApplications).toFixed(2)
+                : 0}
+            </h3>
+          </div>
+
+          <div className="insight-card">
+            <p>Placement Health</p>
+            <h3>
+              {selectionRate >= 50
+                ? "Excellent"
+                : selectionRate >= 20
+                ? "Good"
+                : "Needs Improvement"}
+            </h3>
+          </div>
+
+          <div className="insight-card">
+            <p>Unselected Applications</p>
+            <h3>
+              {(stats?.totalApplications ?? 0) -
+                (stats?.selectedCount ?? 0)}
+            </h3>
+          </div>
+
+        </div>
       </div>
 
     </div>
