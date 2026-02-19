@@ -6,7 +6,6 @@ import "../../styles/AdminDashboard.css";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
-  const [recentStudents, setRecentStudents] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
   const navigate = useNavigate();
 
@@ -14,7 +13,6 @@ export default function AdminDashboard() {
     try {
       const res = await API.get("/admin/stats");
       setStats(res.data);
-      setRecentStudents(res.data.recentStudents || []);
       setLastUpdated(new Date());
     } catch (error) {
       console.error("Failed to load admin stats", error);
@@ -42,7 +40,7 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* ---------------- KPI CARDS ---------------- */}
+      {/* KPI CARDS */}
       <div className="kpi-grid">
         <div className="kpi-card">
           <h3>{stats?.totalStudents ?? 0}</h3>
@@ -65,7 +63,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* ---------------- PLACEMENT FUNNEL ---------------- */}
+      {/* PLACEMENT FUNNEL */}
       <div className="funnel-section">
         <h4>Placement Funnel</h4>
 
@@ -91,7 +89,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* ---------------- QUICK ACTIONS ---------------- */}
+      {/* QUICK ACTIONS */}
       <div className="quick-actions">
         <h4>Quick Actions</h4>
 
