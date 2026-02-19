@@ -86,41 +86,30 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* ---------------- DEPARTMENT PERFORMANCE ---------------- */}
-      <div className="department-section">
-        <h4>Department Wise Placement Performance</h4>
+      {/* ---------------- RECENT ACTIVITY ---------------- */}
+      <div className="activity-section">
+        <h4>Recent Activity</h4>
 
-        {!stats?.departmentPerformance ||
-        stats.departmentPerformance.length === 0 ? (
-          <p className="empty-text">No department data available.</p>
+        {!stats?.recentActivity ||
+        stats.recentActivity.length === 0 ? (
+          <p className="empty-text">No recent activity.</p>
         ) : (
-          <div className="department-grid">
-            {stats.departmentPerformance.map((dept, index) => (
-              <div key={index} className="department-card">
-                <h5>{dept._id}</h5>
-
-                <div className="dept-row">
-                  <span>Total Students</span>
-                  <strong>{dept.totalStudents ?? 0}</strong>
-                </div>
-
-                <div className="dept-row">
-                  <span>Total Applications</span>
-                  <strong>{dept.totalApplications ?? 0}</strong>
-                </div>
-
-                <div className="dept-row">
-                  <span>Selected</span>
-                  <strong>{dept.selectedCount ?? 0}</strong>
-                </div>
-
-                <div className="dept-row">
-                  <span>Success Rate</span>
-                  <strong>{dept.selectionRate ?? 0}%</strong>
-                </div>
-              </div>
+          <ul className="activity-list">
+            {stats.recentActivity.map((item, index) => (
+              <li key={index} className="activity-item">
+                <strong>{item.student?.name}</strong>{" "}
+                {item.status === "Selected" ? (
+                  <span>
+                    got selected at {item.job?.company}
+                  </span>
+                ) : (
+                  <span>
+                    applied for {item.job?.role} at {item.job?.company}
+                  </span>
+                )}
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
     </div>
