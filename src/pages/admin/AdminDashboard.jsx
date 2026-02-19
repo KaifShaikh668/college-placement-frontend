@@ -6,11 +6,37 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
 
+  // Animated counters
+  const [students, setStudents] = useState(0);
+  const [applications, setApplications] = useState(0);
+  const [selected, setSelected] = useState(0);
+  const [rate, setRate] = useState(0);
+
+  const animateValue = (setter, end, duration = 800) => {
+    let start = 0;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setter(end);
+        clearInterval(timer);
+      } else {
+        setter(Math.floor(start));
+      }
+    }, 16);
+  };
+
   const fetchStats = async () => {
     try {
       const res = await API.get("/admin/stats");
       setStats(res.data);
       setLastUpdated(new Date());
+
+      animateValue(setStudents, res.data.totalStudents || 0);
+      animateValue(setApplications, res.data.totalApplications || 0);
+      animateValue(setSelected, res.data.selectedCount || 0);
+      animateValue(setRate, parseFloat(res.data.selectionRate) || 0);
+
     } catch (error) {
       console.error("Failed to load dashboard", error);
     }
@@ -18,21 +44,14 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchStats();
-    const interval = setInterval(fetchStats, 10000);
-    return () => clearInterval(interval);
   }, []);
-
-  const totalStudents = stats?.totalStudents ?? 0;
-  const totalApplications = stats?.totalApplications ?? 0;
-  const selectedCount = stats?.selectedCount ?? 0;
-  const selectionRate = Number(stats?.selectionRate ?? 0);
 
   return (
     <div className="admin-dashboard">
 
       {/* Header */}
       <div className="dashboard-header">
-        <h2>Admin Dashboard</h2>
+        <h2>Executive Dashboard</h2>
         {lastUpdated && (
           <span className="last-updated">
             Updated {lastUpdated.toLocaleTimeString()}
@@ -40,96 +59,56 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* KPI CARDS */}
-      <div className="kpi-grid">
-        <div className="kpi-card">
-          <h3>{totalStudents}</h3>
-          <p>Total Students</p>
+      {/* KPI GRID */}
+      <div className="kpi-grid executive">
+
+        <div className="kpi-card executive-card">
+          <div className="kpi-label">Total Students</div>
+          <div className="kpi-value">{students}</div>
         </div>
 
-        <div className="kpi-card">
-          <h3>{totalApplications}</h3>
-          <p>Total Applications</p>
+        <div className="kpi-card executive-card">
+          <div className="kpi-label">Applications</div>
+          <div className="kpi-value">{applications}</div>
         </div>
 
-        <div className="kpi-card">
-          <h3>{selectedCount}</h3>
-          <p>Selected</p>
+        <div className="kpi-card executive-card">
+          <div className="kpi-label">Selected</div>
+          <div className="kpi-value">{selected}</div>
         </div>
 
-        <div className="kpi-card highlight">
-          <h3>{selectionRate}%</h3>
-          <p>Selection Rate</p>
+        <div className="kpi-card executive-card highlight">
+          <div className="kpi-label">Selection Rate</div>
+          <div className="kpi-value">{rate}%</div>
         </div>
+
       </div>
 
-      {/* Placement Funnel */}
-      <div className="funnel-section">
-        <h4>Placement Funnel</h4>
-        <div className="funnel-row">
-          <div className="funnel-box">
-            <span>{totalStudents}</span>
-            <p>Students</p>
+      {/* Executive Summary Panel */}
+      <div className="executive-summary">
+        <h4>Placement Health Overview</h4>
+
+        <p>
+          {rate >= 50
+            ? "🚀 Outstanding placement performance this cycle."
+            : rate >= 25
+            ? "📈 Good placement performance. Scope to improve."
+            : "⚠️ Placement performance needs attention."}
+        </p>
+
+        <div className="summary-metrics">
+          <div>
+            <strong>Unselected Applications:</strong>{" "}
+            {(stats?.totalApplications ?? 0) -
+              (stats?.selectedCount ?? 0)}
           </div>
 
-          <div className="arrow">→</div>
-
-          <div className="funnel-box">
-            <span>{totalApplications}</span>
-            <p>Applications</p>
+          <div>
+            <strong>Applications per Student:</strong>{" "}
+            {stats?.totalStudents > 0
+              ? (stats.totalApplications / stats.totalStudents).toFixed(2)
+              : 0}
           </div>
-
-          <div className="arrow">→</div>
-
-          <div className="funnel-box selected-box">
-            <span>{selectedCount}</span>
-            <p>Selected</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Placement Insights */}
-      <div className="insights-section">
-        <h4>Placement Insights</h4>
-
-        <div className="insights-grid">
-
-          <div className="insight-card">
-            <p>Applications per Student</p>
-            <h3>
-              {totalStudents > 0
-                ? (totalApplications / totalStudents).toFixed(2)
-                : "0.00"}
-            </h3>
-          </div>
-
-          <div className="insight-card">
-            <p>Conversion Ratio</p>
-            <h3>
-              {totalApplications > 0
-                ? (selectedCount / totalApplications).toFixed(2)
-                : "0.00"}
-            </h3>
-          </div>
-
-          <div className="insight-card">
-            <p>Placement Health</p>
-            <h3>
-              {selectionRate >= 50
-                ? "Excellent"
-                : selectionRate >= 20
-                ? "Good"
-                : "Needs Improvement"}
-            </h3>
-          </div>
-
-          <div className="insight-card">
-            <p>Unselected Applications</p>
-            <h3>
-              {totalApplications - selectedCount}
-            </h3>
-          </div>
-
         </div>
       </div>
 
