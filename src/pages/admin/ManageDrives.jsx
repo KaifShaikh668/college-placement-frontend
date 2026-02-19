@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import API from "../../utils/api";
+import axios from "axios";
 import "../../styles/ManageDrives.css";
 
 export default function ManageDrives() {
@@ -16,14 +16,20 @@ export default function ManageDrives() {
   const token = localStorage.getItem("adminToken");
 
   /* =========================
-     FETCH DRIVES (FIXED)
+     FETCH DRIVES (PRODUCTION FIXED)
   ========================= */
   const fetchDrives = useCallback(async () => {
     if (!token) return;
 
     try {
-      const res = await API.get("/jobs/admin");
-      setDrives(res.data);
+      const res = await axios.get(
+        "https://college-placement-backend-fup4.onrender.com/api/jobs/admin",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setDrives(res.data || []);
     } catch (error) {
       console.error(error);
       alert("Failed to load job drives");
@@ -71,9 +77,17 @@ export default function ManageDrives() {
       };
 
       if (editingId === "new") {
-        await API.post("/jobs/admin", payload);
+        await axios.post(
+          "https://college-placement-backend-fup4.onrender.com/api/jobs/admin",
+          payload,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       } else {
-        await API.put(`/jobs/admin/${editingId}`, payload);
+        await axios.put(
+          `https://college-placement-backend-fup4.onrender.com/api/jobs/admin/${editingId}`,
+          payload,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       }
 
       cancelEdit();
@@ -88,7 +102,11 @@ export default function ManageDrives() {
     if (!window.confirm("Delete this drive?")) return;
 
     try {
-      await API.delete(`/jobs/admin/${id}`);
+      await axios.delete(
+        `https://college-placement-backend-fup4.onrender.com/api/jobs/admin/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
       fetchDrives();
     } catch (error) {
       console.error(error);
@@ -96,6 +114,9 @@ export default function ManageDrives() {
     }
   };
 
+  /* =========================
+     UI
+  ========================= */
   return (
     <div className="manage-drives">
       <div className="md-header">
@@ -103,6 +124,7 @@ export default function ManageDrives() {
           <h2>Manage Job Drives</h2>
           <p>Create, edit and manage placement drives.</p>
         </div>
+
         <button className="add-btn" onClick={startAdd}>
           + Add Drive
         </button>
@@ -178,7 +200,7 @@ export default function ManageDrives() {
               <tr key={d._id}>
                 <td>{d.company}</td>
                 <td>{d.role}</td>
-                <td>{d.driveDate?.slice(0, 10)}</td>
+                <td>{d.driveDate ? d.driveDate.slice(0, 10) : ""}</td>
                 <td>
                   <span className={`badge ${d.status.toLowerCase()}`}>
                     {d.status}
@@ -199,7 +221,7 @@ export default function ManageDrives() {
                   </button>
                 </td>
               </tr>
-            )}
+            ))}
 
             {drives.length === 0 && !editingId && (
               <tr>
