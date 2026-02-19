@@ -1,4 +1,3 @@
-// -------------------- IMPORTS --------------------
 import React, { useEffect, useState } from "react";
 import API from "../../utils/api";
 import "../../styles/AdminDashboard.css";
@@ -13,7 +12,7 @@ export default function AdminDashboard() {
       setStats(res.data);
       setLastUpdated(new Date());
     } catch (error) {
-      console.error("Failed to load admin stats", error);
+      console.error("Failed to load dashboard", error);
     }
   };
 
@@ -24,12 +23,11 @@ export default function AdminDashboard() {
   }, []);
 
   const selectionRate = stats?.selectionRate ?? 0;
-  const recentActivity = stats?.recentActivity ?? [];
 
   return (
     <div className="admin-dashboard">
 
-      {/* ---------------- HEADER ---------------- */}
+      {/* Header */}
       <div className="dashboard-header">
         <h2>Admin Dashboard</h2>
         {lastUpdated && (
@@ -39,7 +37,7 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* ---------------- KPI CARDS ---------------- */}
+      {/* KPI CARDS */}
       <div className="kpi-grid">
         <div className="kpi-card">
           <h3>{stats?.totalStudents ?? 0}</h3>
@@ -62,25 +60,20 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* ---------------- PLACEMENT FUNNEL ---------------- */}
+      {/* Placement Funnel */}
       <div className="funnel-section">
         <h4>Placement Funnel</h4>
-
         <div className="funnel-row">
           <div className="funnel-box">
             <span>{stats?.totalStudents ?? 0}</span>
             <p>Students</p>
           </div>
-
           <div className="arrow">→</div>
-
           <div className="funnel-box">
             <span>{stats?.totalApplications ?? 0}</span>
             <p>Applications</p>
           </div>
-
           <div className="arrow">→</div>
-
           <div className="funnel-box selected-box">
             <span>{stats?.selectedCount ?? 0}</span>
             <p>Selected</p>
@@ -88,30 +81,18 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* ---------------- RECENT ACTIVITY ---------------- */}
+      {/* Recent Applications */}
       <div className="activity-section">
-        <h4>Recent Activity</h4>
+        <h4>Recent Applications</h4>
 
-        {recentActivity.length === 0 ? (
-          <p className="empty-text">No recent activity.</p>
+        {!stats?.recentApplications ||
+        stats.recentApplications.length === 0 ? (
+          <p className="empty-text">No recent applications.</p>
         ) : (
           <ul className="activity-list">
-            {recentActivity.map((item, index) => (
+            {stats.recentApplications.map((app, index) => (
               <li key={index} className="activity-item">
-                <strong>{item?.student?.name || "Unknown Student"}</strong>{" "}
-                {item?.status === "Selected" ? (
-                  <span>
-                    got selected at{" "}
-                    <strong>{item?.job?.company || "Unknown Company"}</strong>
-                  </span>
-                ) : (
-                  <span>
-                    applied for{" "}
-                    <strong>{item?.job?.role || "Unknown Role"}</strong>{" "}
-                    at{" "}
-                    <strong>{item?.job?.company || "Unknown Company"}</strong>
-                  </span>
-                )}
+                Application ID: {app._id} — Status: {app.status}
               </li>
             ))}
           </ul>
