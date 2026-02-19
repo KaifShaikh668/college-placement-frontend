@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../../utils/api";
 import "../../styles/Login.css";
 
 import logo from "../../assets/images/logo.png";
@@ -34,14 +34,13 @@ export default function AdminLogin() {
     try {
       setLoading(true);
 
-      // ✅ USE SAME AUTH LOGIN ROUTE
-      const res = await axios.post("http://localhost:5002/api/auth/login", {
+      // ✅ Correct backend route
+      const res = await API.post("/auth/login", {
         email: email.trim(),
         password: pass.trim(),
-        role: "admin",
       });
 
-      // ✅ SAVE TOKEN + ADMIN USER
+      // ✅ Save admin token
       localStorage.setItem("adminToken", res.data.token);
       localStorage.setItem("admin", JSON.stringify(res.data.user));
 
@@ -105,7 +104,10 @@ export default function AdminLogin() {
             {loading ? "Logging in..." : "Login"}
           </button>
 
-          <button className="back-link-btn" onClick={() => navigate("/login/student")}>
+          <button
+            className="back-link-btn"
+            onClick={() => navigate("/login/student")}
+          >
             ← Back to Student Login
           </button>
         </div>
