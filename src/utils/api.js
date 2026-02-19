@@ -5,8 +5,13 @@ const API = axios.create({
 });
 
 API.interceptors.request.use((req) => {
-  const studentToken = localStorage.getItem("studentToken");
   const adminToken = localStorage.getItem("adminToken");
+  const studentToken = localStorage.getItem("studentToken");
+
+  // Ensure headers object exists
+  if (!req.headers) {
+    req.headers = {};
+  }
 
   // ✅ If admin logged in → always send admin token
   if (adminToken) {
