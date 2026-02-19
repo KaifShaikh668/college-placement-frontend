@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../../utils/api"; // ✅ USE PRODUCTION API INSTANCE
 import "../../styles/ManageStudents.css";
 
 const PAGE_SIZE = 5;
@@ -25,8 +25,6 @@ export default function ManageStudents() {
   const [sortKey, setSortKey] = useState("");
   const [sortDir, setSortDir] = useState("asc");
 
-  const token = localStorage.getItem("adminToken");
-
   /* =========================
      FETCH STUDENTS (REAL DATA)
   ========================= */
@@ -34,10 +32,8 @@ export default function ManageStudents() {
     try {
       setLoading(true);
 
-      // ✅ FIXED URL ✅
-      const res = await axios.get("http://localhost:5002/api/student", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      // ✅ FIXED — NO LOCALHOST
+      const res = await API.get("/student");
 
       const mapped = res.data.map((s) => ({
         id: s._id,
@@ -113,7 +109,6 @@ export default function ManageStudents() {
     setEditingId(null);
   }
 
-  // ✅ BACKEND UPDATE FIXED
   const saveStudent = async () => {
     if (currentUserRole !== "ADMIN") return;
 
@@ -123,26 +118,19 @@ export default function ManageStudents() {
     }
 
     try {
-      // ADD NEW STUDENT (not supported yet)
       if (editingId === "new") {
         alert("Add student backend not connected yet ✅");
         cancelEdit();
         return;
       }
 
-      // ✅ UPDATE STUDENT ✅
-      await axios.put(
-        `http://localhost:5002/api/student/${editingId}`,
-        {
-          name: form.name,
-          email: form.email,
-          course: form.course,
-          status: form.status,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      // ✅ FIXED — NO LOCALHOST
+      await API.put(`/student/${editingId}`, {
+        name: form.name,
+        email: form.email,
+        course: form.course,
+        status: form.status,
+      });
 
       cancelEdit();
       fetchStudents();
@@ -152,7 +140,6 @@ export default function ManageStudents() {
     }
   };
 
-  // ✅ DELETE STUDENT (BACKEND WORKING)
   const deleteStudent = async (id) => {
     if (currentUserRole !== "ADMIN") return;
 
@@ -160,10 +147,8 @@ export default function ManageStudents() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5002/api/student/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      // ✅ FIXED — NO LOCALHOST
+      await API.delete(`/student/${id}`);
       fetchStudents();
     } catch (error) {
       console.error("DELETE STUDENT ERROR:", error);
@@ -302,7 +287,7 @@ export default function ManageStudents() {
               ))}
 
               {currentStudents.length === 0 && (
-                <tr>
+        <tr>
                   <td colSpan="5" className="empty">
                     No students found
                   </td>
