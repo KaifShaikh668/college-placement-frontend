@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import API from "../../utils/api";
 import "../../styles/ManageDrives.css";
 
 export default function ManageDrives() {
@@ -22,12 +22,7 @@ export default function ManageDrives() {
     if (!token) return;
 
     try {
-      const res = await axios.get(
-        "http://localhost:5002/api/jobs/admin",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await API.get("/jobs/admin");
       setDrives(res.data);
     } catch (error) {
       console.error(error);
@@ -76,17 +71,9 @@ export default function ManageDrives() {
       };
 
       if (editingId === "new") {
-        await axios.post(
-          "http://localhost:5002/api/jobs/admin",
-          payload,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await API.post("/jobs/admin", payload);
       } else {
-        await axios.put(
-          `http://localhost:5002/api/jobs/admin/${editingId}`,
-          payload,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await API.put(`/jobs/admin/${editingId}`, payload);
       }
 
       cancelEdit();
@@ -101,10 +88,7 @@ export default function ManageDrives() {
     if (!window.confirm("Delete this drive?")) return;
 
     try {
-      await axios.delete(
-        `http://localhost:5002/api/jobs/admin/${id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await API.delete(`/jobs/admin/${id}`);
       fetchDrives();
     } catch (error) {
       console.error(error);
@@ -112,9 +96,6 @@ export default function ManageDrives() {
     }
   };
 
-  /* =========================
-     UI
-  ========================= */
   return (
     <div className="manage-drives">
       <div className="md-header">
@@ -218,7 +199,7 @@ export default function ManageDrives() {
                   </button>
                 </td>
               </tr>
-            ))}
+            )}
 
             {drives.length === 0 && !editingId && (
               <tr>

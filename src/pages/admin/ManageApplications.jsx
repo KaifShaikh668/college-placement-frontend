@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../../utils/api";
 import "../../styles/ManageStudents.css";
 
 export default function ManageApplications() {
@@ -10,7 +10,6 @@ export default function ManageApplications() {
 
   const token = localStorage.getItem("adminToken");
 
-  // ✅ FETCH ALL APPLICATIONS
   const fetchApplications = async () => {
     try {
       setLoading(true);
@@ -21,12 +20,7 @@ export default function ManageApplications() {
         return;
       }
 
-      const res = await axios.get(
-        "http://localhost:5002/api/applications/admin/all",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await API.get("/applications/admin/all");
 
       setApplications(res.data || []);
     } catch (error) {
@@ -42,7 +36,6 @@ export default function ManageApplications() {
     // eslint-disable-next-line
   }, []);
 
-  // ✅ UPDATE STATUS
   const updateStatus = async (id, status) => {
     try {
       if (!token) {
@@ -50,22 +43,14 @@ export default function ManageApplications() {
         return;
       }
 
-      await axios.put(
-        `http://localhost:5002/api/applications/admin/${id}/status`,
-        { status },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await API.put(`/applications/admin/${id}/status`, { status });
 
-      // ✅ Update UI instantly (no full reload delay)
       setApplications((prev) =>
         prev.map((app) =>
           app._id === id ? { ...app, status } : app
         )
       );
 
-      // ✅ Also update modal if open
       if (selectedApp?._id === id) {
         setSelectedApp((prev) => ({ ...prev, status }));
       }
@@ -75,7 +60,6 @@ export default function ManageApplications() {
     }
   };
 
-  // ✅ LOADING UI
   if (loading) {
     return (
       <div className="manage-students">
@@ -157,9 +141,6 @@ export default function ManageApplications() {
         </table>
       </div>
 
-      {/* =======================
-         SIMPLE MODAL POPUP
-      ======================= */}
       {selectedApp && (
         <div
           style={{
@@ -188,25 +169,12 @@ export default function ManageApplications() {
           >
             <h3 style={{ marginBottom: "10px" }}>Application Details</h3>
 
-            <p>
-              <b>Student:</b> {selectedApp.student?.name || "N/A"}
-            </p>
-            <p>
-              <b>Email:</b> {selectedApp.student?.email || "N/A"}
-            </p>
-            <p>
-              <b>Company:</b> {selectedApp.job?.company || "N/A"}
-            </p>
-            <p>
-              <b>Role:</b> {selectedApp.job?.role || "N/A"}
-            </p>
-            <p>
-              <b>Status:</b> {selectedApp.status || "Applied"}
-            </p>
-            <p>
-              <b>Applied On:</b>{" "}
-              {selectedApp.createdAt ? selectedApp.createdAt.slice(0, 10) : "N/A"}
-            </p>
+            <p><b>Student:</b> {selectedApp.student?.name || "N/A"}</p>
+            <p><b>Email:</b> {selectedApp.student?.email || "N/A"}</p>
+            <p><b>Company:</b> {selectedApp.job?.company || "N/A"}</p>
+            <p><b>Role:</b> {selectedApp.job?.role || "N/A"}</p>
+            <p><b>Status:</b> {selectedApp.status || "Applied"}</p>
+            <p><b>Applied On:</b> {selectedApp.createdAt ? selectedApp.createdAt.slice(0, 10) : "N/A"}</p>
 
             <button
               className="btn-delete"
