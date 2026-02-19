@@ -22,7 +22,10 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const selectionRate = stats?.selectionRate ?? 0;
+  const totalStudents = stats?.totalStudents ?? 0;
+  const totalApplications = stats?.totalApplications ?? 0;
+  const selectedCount = stats?.selectedCount ?? 0;
+  const selectionRate = Number(stats?.selectionRate ?? 0);
 
   return (
     <div className="admin-dashboard">
@@ -40,17 +43,17 @@ export default function AdminDashboard() {
       {/* KPI CARDS */}
       <div className="kpi-grid">
         <div className="kpi-card">
-          <h3>{stats?.totalStudents ?? 0}</h3>
+          <h3>{totalStudents}</h3>
           <p>Total Students</p>
         </div>
 
         <div className="kpi-card">
-          <h3>{stats?.totalApplications ?? 0}</h3>
+          <h3>{totalApplications}</h3>
           <p>Total Applications</p>
         </div>
 
         <div className="kpi-card">
-          <h3>{stats?.selectedCount ?? 0}</h3>
+          <h3>{selectedCount}</h3>
           <p>Selected</p>
         </div>
 
@@ -65,17 +68,21 @@ export default function AdminDashboard() {
         <h4>Placement Funnel</h4>
         <div className="funnel-row">
           <div className="funnel-box">
-            <span>{stats?.totalStudents ?? 0}</span>
+            <span>{totalStudents}</span>
             <p>Students</p>
           </div>
+
           <div className="arrow">→</div>
+
           <div className="funnel-box">
-            <span>{stats?.totalApplications ?? 0}</span>
+            <span>{totalApplications}</span>
             <p>Applications</p>
           </div>
+
           <div className="arrow">→</div>
+
           <div className="funnel-box selected-box">
-            <span>{stats?.selectedCount ?? 0}</span>
+            <span>{selectedCount}</span>
             <p>Selected</p>
           </div>
         </div>
@@ -90,18 +97,18 @@ export default function AdminDashboard() {
           <div className="insight-card">
             <p>Applications per Student</p>
             <h3>
-              {stats?.totalStudents > 0
-                ? (stats.totalApplications / stats.totalStudents).toFixed(2)
-                : 0}
+              {totalStudents > 0
+                ? (totalApplications / totalStudents).toFixed(2)
+                : "0.00"}
             </h3>
           </div>
 
           <div className="insight-card">
             <p>Conversion Ratio</p>
             <h3>
-              {stats?.totalApplications > 0
-                ? (stats.selectedCount / stats.totalApplications).toFixed(2)
-                : 0}
+              {totalApplications > 0
+                ? (selectedCount / totalApplications).toFixed(2)
+                : "0.00"}
             </h3>
           </div>
 
@@ -119,8 +126,7 @@ export default function AdminDashboard() {
           <div className="insight-card">
             <p>Unselected Applications</p>
             <h3>
-              {(stats?.totalApplications ?? 0) -
-                (stats?.selectedCount ?? 0)}
+              {totalApplications - selectedCount}
             </h3>
           </div>
 
