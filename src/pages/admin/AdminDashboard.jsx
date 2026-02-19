@@ -1,13 +1,11 @@
 // -------------------- IMPORTS --------------------
 import React, { useEffect, useState } from "react";
 import API from "../../utils/api";
-import { useNavigate } from "react-router-dom";
 import "../../styles/AdminDashboard.css";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
-  const navigate = useNavigate();
 
   const fetchStats = async () => {
     try {
@@ -40,7 +38,7 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* KPI CARDS */}
+      {/* ---------------- KPI CARDS ---------------- */}
       <div className="kpi-grid">
         <div className="kpi-card">
           <h3>{stats?.totalStudents ?? 0}</h3>
@@ -63,7 +61,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* PLACEMENT FUNNEL */}
+      {/* ---------------- PLACEMENT FUNNEL ---------------- */}
       <div className="funnel-section">
         <h4>Placement Funnel</h4>
 
@@ -89,27 +87,37 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* QUICK ACTIONS */}
-      <div className="quick-actions">
-        <h4>Quick Actions</h4>
+      {/* ---------------- DEPARTMENT PERFORMANCE ---------------- */}
+      <div className="department-section">
+        <h4>Department Wise Placement Performance</h4>
 
-        <div className="action-grid">
-          <button onClick={() => navigate("/admin/students")}>
-            Manage Students
-          </button>
+        {!stats?.departmentPerformance ||
+        stats.departmentPerformance.length === 0 ? (
+          <p className="empty-text">No department data available.</p>
+        ) : (
+          <div className="department-grid">
+            {stats.departmentPerformance.map((dept, index) => (
+              <div key={index} className="department-card">
+                <h5>{dept.department}</h5>
 
-          <button onClick={() => navigate("/admin/drives")}>
-            Manage Drives
-          </button>
+                <div className="dept-row">
+                  <span>Students</span>
+                  <strong>{dept.totalStudents}</strong>
+                </div>
 
-          <button onClick={() => navigate("/admin/applications")}>
-            View Applications
-          </button>
+                <div className="dept-row">
+                  <span>Selected</span>
+                  <strong>{dept.selectedCount}</strong>
+                </div>
 
-          <button onClick={() => navigate("/admin/notices")}>
-            Send Notice
-          </button>
-        </div>
+                <div className="dept-row">
+                  <span>Success Rate</span>
+                  <strong>{dept.successRate}%</strong>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
     </div>
