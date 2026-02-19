@@ -27,8 +27,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-dashboard">
-
-      {/* Header */}
+      {/* ---------------- HEADER ---------------- */}
       <div className="dashboard-header">
         <h2>Admin Dashboard</h2>
         {lastUpdated && (
@@ -98,28 +97,32 @@ export default function AdminDashboard() {
           <div className="department-grid">
             {stats.departmentPerformance.map((dept, index) => (
               <div key={index} className="department-card">
-                <h5>{dept.department}</h5>
+                <h5>{dept._id}</h5>
 
                 <div className="dept-row">
-                  <span>Students</span>
-                  <strong>{dept.totalStudents}</strong>
+                  <span>Total Students</span>
+                  <strong>{dept.totalStudents ?? 0}</strong>
+                </div>
+
+                <div className="dept-row">
+                  <span>Total Applications</span>
+                  <strong>{dept.totalApplications ?? 0}</strong>
                 </div>
 
                 <div className="dept-row">
                   <span>Selected</span>
-                  <strong>{dept.selectedCount}</strong>
+                  <strong>{dept.selectedCount ?? 0}</strong>
                 </div>
 
                 <div className="dept-row">
                   <span>Success Rate</span>
-                  <strong>{dept.successRate}%</strong>
+                  <strong>{dept.selectionRate ?? 0}%</strong>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
-
     </div>
   );
 }
