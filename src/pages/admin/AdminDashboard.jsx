@@ -24,9 +24,11 @@ export default function AdminDashboard() {
   }, []);
 
   const selectionRate = stats?.selectionRate ?? 0;
+  const recentActivity = stats?.recentActivity ?? [];
 
   return (
     <div className="admin-dashboard">
+
       {/* ---------------- HEADER ---------------- */}
       <div className="dashboard-header">
         <h2>Admin Dashboard</h2>
@@ -90,21 +92,24 @@ export default function AdminDashboard() {
       <div className="activity-section">
         <h4>Recent Activity</h4>
 
-        {!stats?.recentActivity ||
-        stats.recentActivity.length === 0 ? (
+        {recentActivity.length === 0 ? (
           <p className="empty-text">No recent activity.</p>
         ) : (
           <ul className="activity-list">
-            {stats.recentActivity.map((item, index) => (
+            {recentActivity.map((item, index) => (
               <li key={index} className="activity-item">
-                <strong>{item.student?.name}</strong>{" "}
-                {item.status === "Selected" ? (
+                <strong>{item?.student?.name || "Unknown Student"}</strong>{" "}
+                {item?.status === "Selected" ? (
                   <span>
-                    got selected at {item.job?.company}
+                    got selected at{" "}
+                    <strong>{item?.job?.company || "Unknown Company"}</strong>
                   </span>
                 ) : (
                   <span>
-                    applied for {item.job?.role} at {item.job?.company}
+                    applied for{" "}
+                    <strong>{item?.job?.role || "Unknown Role"}</strong>{" "}
+                    at{" "}
+                    <strong>{item?.job?.company || "Unknown Company"}</strong>
                   </span>
                 )}
               </li>
@@ -112,6 +117,7 @@ export default function AdminDashboard() {
           </ul>
         )}
       </div>
+
     </div>
   );
 }
