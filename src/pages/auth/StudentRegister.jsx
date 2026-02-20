@@ -7,13 +7,16 @@ export default function StudentRegister() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
+    studentId: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   function handleChange(e) {
     setFormData({
@@ -23,21 +26,23 @@ export default function StudentRegister() {
   }
 
   async function handleRegister(e) {
-    e.preventDefault(); // ⛔ VERY IMPORTANT
+    e.preventDefault();
 
-    // basic validation
+    setErrorMessage("");
+    setSuccessMessage("");
+
     if (
-      !formData.name ||
+      !formData.studentId ||
       !formData.email ||
       !formData.password ||
       !formData.confirmPassword
     ) {
-      alert("All fields are required");
+      setErrorMessage("All fields are required");
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      setErrorMessage("Passwords do not match");
       return;
     }
 
@@ -45,26 +50,34 @@ export default function StudentRegister() {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:5002/api/auth/register",
+        "https://college-placement-backend-fup4.onrender.com/api/auth/register",
         {
-          name: formData.name,
+          studentId: formData.studentId,
           email: formData.email,
           password: formData.password,
-          role: "student", // optional but recommended
         }
       );
 
-      console.log("REGISTER RESPONSE:", res.data);
+      // ✅ Success message under form
+      setSuccessMessage(res.data.message);
 
-      alert("Registration Successful!");
-      navigate("/login/student");
+      // ✅ Toast popup
+      setShowToast(true);
+
+      // Auto hide toast
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+
+      // ✅ Auto redirect after 2 seconds
+      setTimeout(() => {
+        navigate("/login/student");
+      }, 2000);
 
     } catch (error) {
-      console.error("REGISTER ERROR:", error);
-
-      alert(
+      setErrorMessage(
         error.response?.data?.message ||
-        "Registration failed. Check backend."
+        "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -73,15 +86,35 @@ export default function StudentRegister() {
 
   return (
     <div className="auth-container">
+      {/* ✅ Toast Popup */}
+      {showToast && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            backgroundColor: "#28a745",
+            color: "#fff",
+            padding: "12px 20px",
+            borderRadius: "8px",
+            boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
+            zIndex: 9999,
+            fontWeight: "500",
+          }}
+        >
+          Registration Successful 🎉
+        </div>
+      )}
+
       <div className="auth-card">
         <h2>Student Registration</h2>
 
         <form onSubmit={handleRegister}>
           <input
             type="text"
-            name="name"
-            placeholder="Full Name"
-            value={formData.name}
+            name="studentId"
+            placeholder="Student ID"
+            value={formData.studentId}
             onChange={handleChange}
           />
 
@@ -112,6 +145,20 @@ export default function StudentRegister() {
           <button type="submit" disabled={loading}>
             {loading ? "Registering..." : "Register"}
           </button>
+
+          {/* ✅ Green Success Message */}
+          {successMessage && (
+            <p style={{ color: "green", marginTop: "10px" }}>
+              {successMessage}
+            </p>
+          )}
+
+          {/* ❌ Error Message */}
+          {errorMessage && (
+            <p style={{ color: "red", marginTop: "10px" }}>
+              {errorMessage}
+            </p>
+          )}
         </form>
       </div>
     </div>
