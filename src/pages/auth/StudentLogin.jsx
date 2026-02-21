@@ -151,7 +151,7 @@ Register
 <div className="form-area">
 
 <h3 className="text-center">
-Student Login – College Placement Cell
+Student Login
 </h3>
 
 <input
