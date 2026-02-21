@@ -24,7 +24,7 @@ export default function StudentLogin() {
   const [showRegPass, setShowRegPass] = useState(false);
   const [showRegConfirmPass, setShowRegConfirmPass] = useState(false);
 
-  const [formErrors, setFormErrors] = useState({});
+  const [, setFormErrors] = useState({});
   const [showToast, setShowToast] = useState(false);
 
   /* ---------------- VALIDATIONS ---------------- */
