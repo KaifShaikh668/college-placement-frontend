@@ -26,14 +26,13 @@ const [regConfirmPassword,setRegConfirmPassword]=useState("");
 const [showRegPass,setShowRegPass]=useState(false);
 const [showRegConfirmPass,setShowRegConfirmPass]=useState(false);
 
-const [,setFormErrors]=useState({});
 const [showToast,setShowToast]=useState(false);
 
-/* ---------------- VALIDATIONS ---------------- */
+/* ---------- VALIDATION ---------- */
 
-/* ✅ ANY DOMAIN EMAIL */
+/* STRICT EMAIL */
 const emailValid = useMemo(()=>{
-return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/
 .test(regEmail.trim());
 },[regEmail]);
 
@@ -42,36 +41,34 @@ return /^\d{7}$/.test(regStudentId.trim());
 },[regStudentId]);
 
 const passwordValid = useMemo(()=>{
-const val = regPassword;
+const v=regPassword;
 return(
-val.length>=6 &&
-(val.match(/\d/g)||[]).length>=3 &&
-/[!@#$%^&*]/.test(val) &&
-/[A-Za-z]/.test(val)
+v.length>=6 &&
+(v.match(/\d/g)||[]).length>=3 &&
+/[!@#$%^&*]/.test(v) &&
+/[A-Za-z]/.test(v)
 );
 },[regPassword]);
 
-const confirmPasswordValid = useMemo(()=>{
-return regConfirmPassword.length>0 &&
+const confirmPasswordValid =
+regConfirmPassword.length>0 &&
 regPassword===regConfirmPassword;
-},[regPassword,regConfirmPassword]);
 
-/* ---------------- LOGIN ---------------- */
+/* ---------- LOGIN ---------- */
 
-const handleLogin = async()=>{
+const handleLogin=async()=>{
 
 if(!loginEmail||!loginPassword)return;
 
 try{
 setLoading(true);
 
-const res = await axios.post(
+const res=await axios.post(
 "https://college-placement-backend-fup4.onrender.com/api/auth/login",
 {
 email:loginEmail.trim(),
 password:loginPassword.trim()
-}
-);
+});
 
 localStorage.setItem("studentToken",res.data.token);
 localStorage.setItem("student",
@@ -84,16 +81,14 @@ setLoading(false);
 }
 };
 
-/* ---------------- REGISTER ---------------- */
+/* ---------- REGISTER ---------- */
 
-const handleRegister = async()=>{
+const handleRegister=async()=>{
 
 if(!emailValid||
 !studentIdValid||
 !passwordValid||
 !confirmPasswordValid) return;
-
-try{
 
 await axios.post(
 "https://college-placement-backend-fup4.onrender.com/api/auth/register",
@@ -101,8 +96,7 @@ await axios.post(
 email:regEmail.trim(),
 studentId:regStudentId.trim(),
 password:regPassword.trim()
-}
-);
+});
 
 setShowToast(true);
 
@@ -114,18 +108,9 @@ setRegPassword("");
 setRegConfirmPassword("");
 setShowToast(false);
 },2000);
-
-}catch(err){
-setFormErrors({
-general:
-err.response?.data?.message ||
-"Registration failed"
-});
-}
 };
 
 return(
-
 <div className="login-wrapper">
 
 {showToast &&
@@ -135,9 +120,7 @@ Registration Successful 🎉
 
 <div className="left-panel">
 
-<img src={logo}
-alt="Logo"
-className="login-logo"/>
+<img src={logo} className="login-logo"/>
 
 <h1 className="project-title">
 Welcome to College Placement Cell
@@ -145,38 +128,35 @@ Welcome to College Placement Cell
 
 <div className="auth-card shadow">
 
-{/* ---------- TABS ---------- */}
 <div className="tab-container">
-
 <button
-className={activeTab==="login"?
-"tab active":"tab"}
+className={activeTab==="login"?"tab active":"tab"}
 onClick={()=>setActiveTab("login")}
 >
 Login
 </button>
 
 <button
-className={activeTab==="register"?
-"tab active":"tab"}
+className={activeTab==="register"?"tab active":"tab"}
 onClick={()=>setActiveTab("register")}
 >
 Register
 </button>
-
 </div>
 
-{/* ---------- LOGIN ---------- */}
+{/* LOGIN */}
 {activeTab==="login"&&(
-
 <div className="form-area">
+
+<h3 className="text-center">
+Student Login – College Placement Cell
+</h3>
 
 <input
 className="form-control"
 placeholder="Email"
 value={loginEmail}
-onChange={(e)=>
-setLoginEmail(e.target.value)}
+onChange={(e)=>setLoginEmail(e.target.value)}
 />
 
 <div className="password-wrapper">
@@ -185,15 +165,13 @@ type={showLoginPass?"text":"password"}
 className="form-control"
 placeholder="Password"
 value={loginPassword}
-onChange={(e)=>
-setLoginPassword(e.target.value)}
+onChange={(e)=>setLoginPassword(e.target.value)}
 />
 
 <button
 type="button"
 className="show-hide-btn"
-onClick={()=>
-setShowLoginPass(!showLoginPass)}
+onClick={()=>setShowLoginPass(!showLoginPass)}
 >
 {showLoginPass?"Hide":"Show"}
 </button>
@@ -210,9 +188,8 @@ disabled={loading}
 </div>
 )}
 
-{/* ---------- REGISTER ---------- */}
+{/* REGISTER */}
 {activeTab==="register"&&(
-
 <div className="form-area">
 
 {/* EMAIL */}
@@ -221,17 +198,14 @@ disabled={loading}
 className="form-control"
 placeholder="Email"
 value={regEmail}
-onChange={(e)=>
-setRegEmail(e.target.value)}
+onChange={(e)=>setRegEmail(e.target.value)}
 />
 
 {regEmail &&
-(emailValid ?
-<FaCheckCircle
-className="status-icon valid"/> :
-<FaTimesCircle
-className="status-icon invalid"/>
-)}
+(emailValid?
+<FaCheckCircle className="status-icon valid"/>:
+<FaTimesCircle className="status-icon invalid"/>)
+}
 </div>
 
 {/* STUDENT ID */}
@@ -248,12 +222,10 @@ e.target.value.replace(/[^0-9]/g,"")
 />
 
 {regStudentId &&
-(studentIdValid ?
-<FaCheckCircle
-className="status-icon valid"/> :
-<FaTimesCircle
-className="status-icon invalid"/>
-)}
+(studentIdValid?
+<FaCheckCircle className="status-icon valid"/>:
+<FaTimesCircle className="status-icon invalid"/>)
+}
 </div>
 
 {/* PASSWORD */}
@@ -264,59 +236,57 @@ type={showRegPass?"text":"password"}
 className="form-control"
 placeholder="Password"
 value={regPassword}
-onChange={(e)=>
-setRegPassword(e.target.value)}
+onChange={(e)=>setRegPassword(e.target.value)}
 />
 
 <button
 type="button"
 className="show-hide-btn"
-onClick={()=>
-setShowRegPass(!showRegPass)}
+onClick={()=>setShowRegPass(!showRegPass)}
 >
 {showRegPass?"Hide":"Show"}
 </button>
 
 {regPassword &&
-(passwordValid ?
-<FaCheckCircle
-className="status-icon valid"/> :
-<FaTimesCircle
-className="status-icon invalid"/>
-)}
+(passwordValid?
+<FaCheckCircle className="status-icon valid"/>:
+<FaTimesCircle className="status-icon invalid"/>)
+}
+
 </div>
 
-{/* CONFIRM PASSWORD */}
+{regPassword && !passwordValid && (
+<p className="password-hint">
+Minimum 6 characters including:
+<br/>• 3 numbers
+<br/>• 1 special character
+</p>
+)}
+
+{/* CONFIRM */}
 <div className="password-wrapper input-with-status">
 
 <input
-type={showRegConfirmPass?
-"text":"password"}
+type={showRegConfirmPass?"text":"password"}
 className="form-control"
 placeholder="Confirm Password"
 value={regConfirmPassword}
-onChange={(e)=>
-setRegConfirmPassword(e.target.value)}
+onChange={(e)=>setRegConfirmPassword(e.target.value)}
 />
 
 <button
 type="button"
 className="show-hide-btn"
-onClick={()=>
-setShowRegConfirmPass(
-!showRegConfirmPass)}
+onClick={()=>setShowRegConfirmPass(!showRegConfirmPass)}
 >
-{showRegConfirmPass?
-"Hide":"Show"}
+{showRegConfirmPass?"Hide":"Show"}
 </button>
 
 {regConfirmPassword &&
-(confirmPasswordValid ?
-<FaCheckCircle
-className="status-icon valid"/> :
-<FaTimesCircle
-className="status-icon invalid"/>
-)}
+(confirmPasswordValid?
+<FaCheckCircle className="status-icon valid"/>:
+<FaTimesCircle className="status-icon invalid"/>)
+}
 </div>
 
 <button
@@ -339,9 +309,7 @@ Register
 </div>
 
 <div className="right-panel">
-<img src={hero}
-alt="Hero"
-className="hero-img"/>
+<img src={hero} className="hero-img"/>
 </div>
 
 </div>
