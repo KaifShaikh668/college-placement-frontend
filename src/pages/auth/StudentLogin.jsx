@@ -20,6 +20,8 @@ export default function StudentLogin() {
   const [regStudentId, setRegStudentId] = useState("");
   const [regPassword, setRegPassword] = useState("");
   const [regConfirmPassword, setRegConfirmPassword] = useState("");
+  const [showRegPass, setShowRegPass] = useState(false);
+  const [showRegConfirmPass, setShowRegConfirmPass] = useState(false);
 
   const [formErrors, setFormErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
@@ -104,7 +106,6 @@ export default function StudentLogin() {
       errors.confirmPassword = "Passwords do not match";
 
     setFormErrors(errors);
-
     if (Object.keys(errors).length > 0) return;
 
     try {
@@ -122,6 +123,8 @@ export default function StudentLogin() {
         setRegStudentId("");
         setRegPassword("");
         setRegConfirmPassword("");
+        setShowRegPass(false);
+        setShowRegConfirmPass(false);
         setFormErrors({});
         setSuccessMessage("");
         setShowToast(false);
@@ -240,6 +243,9 @@ export default function StudentLogin() {
                 value={regEmail}
                 onChange={(e) => setRegEmail(e.target.value)}
               />
+              {formErrors.email && (
+                <p className="error-message">{formErrors.email}</p>
+              )}
 
               <input
                 type="text"
@@ -251,22 +257,53 @@ export default function StudentLogin() {
                 }
                 maxLength={7}
               />
+              {formErrors.studentId && (
+                <p className="error-message">{formErrors.studentId}</p>
+              )}
 
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Password"
-                value={regPassword}
-                onChange={(e) => setRegPassword(e.target.value)}
-              />
+              <div className="password-wrapper">
+                <input
+                  type={showRegPass ? "text" : "password"}
+                  className="form-control"
+                  placeholder="Password"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="show-hide-btn"
+                  onClick={() => setShowRegPass(!showRegPass)}
+                >
+                  {showRegPass ? "Hide" : "Show"}
+                </button>
+              </div>
+              {formErrors.password && (
+                <p className="error-message">{formErrors.password}</p>
+              )}
 
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Re-enter Password"
-                value={regConfirmPassword}
-                onChange={(e) => setRegConfirmPassword(e.target.value)}
-              />
+              <div className="password-wrapper">
+                <input
+                  type={showRegConfirmPass ? "text" : "password"}
+                  className="form-control"
+                  placeholder="Re-enter Password"
+                  value={regConfirmPassword}
+                  onChange={(e) => setRegConfirmPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="show-hide-btn"
+                  onClick={() =>
+                    setShowRegConfirmPass(!showRegConfirmPass)
+                  }
+                >
+                  {showRegConfirmPass ? "Hide" : "Show"}
+                </button>
+              </div>
+              {formErrors.confirmPassword && (
+                <p className="error-message">
+                  {formErrors.confirmPassword}
+                </p>
+              )}
 
               <button className="success-btn w-100" onClick={handleRegister}>
                 Register
