@@ -30,10 +30,9 @@ const [showToast,setShowToast]=useState(false);
 
 /* ---------- VALIDATION ---------- */
 
-/* STRICT EMAIL */
+/* ✅ STRICT REAL EMAIL */
 const emailValid = useMemo(()=>{
-return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/
-.test(regEmail.trim());
+return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(regEmail.trim());
 },[regEmail]);
 
 const studentIdValid = useMemo(()=>{
@@ -44,9 +43,8 @@ const passwordValid = useMemo(()=>{
 const v=regPassword;
 return(
 v.length>=6 &&
-(v.match(/\d/g)||[]).length>=3 &&
-/[!@#$%^&*]/.test(v) &&
-/[A-Za-z]/.test(v)
+/\d/.test(v) &&
+/[!@#$%^&*]/.test(v)
 );
 },[regPassword]);
 
@@ -120,7 +118,11 @@ Registration Successful 🎉
 
 <div className="left-panel">
 
-<img src={logo} className="login-logo"/>
+<img
+src={logo}
+alt="College Placement Cell Logo"
+className="login-logo"
+/>
 
 <h1 className="project-title">
 Welcome to College Placement Cell
@@ -257,8 +259,8 @@ onClick={()=>setShowRegPass(!showRegPass)}
 
 {regPassword && !passwordValid && (
 <p className="password-hint">
-Minimum 6 characters including:
-<br/>• 3 numbers
+Minimum 6 characters with
+<br/>• at least 1 number
 <br/>• 1 special character
 </p>
 )}
@@ -309,7 +311,11 @@ Register
 </div>
 
 <div className="right-panel">
-<img src={hero} className="hero-img"/>
+<img
+src={hero}
+alt="Student placement illustration"
+className="hero-img"
+/>
 </div>
 
 </div>
