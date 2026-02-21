@@ -16,6 +16,7 @@ export default function StudentRegister() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   function handleChange(e) {
     setFormData({
@@ -57,14 +58,14 @@ export default function StudentRegister() {
         }
       );
 
+      // ✅ Set success message
       setSuccessMessage(res.data.message || "Registration successful!");
+      setShowToast(true);
 
-      // 🔥 Redirect with state
+      // ✅ Single timeout for redirect
       setTimeout(() => {
-        navigate("/login/student", {
-          state: { registered: true },
-        });
-      }, 1500);
+        navigate("/login/student");
+      }, 2000);
 
     } catch (error) {
       setErrorMessage(
@@ -78,6 +79,27 @@ export default function StudentRegister() {
 
   return (
     <div className="auth-container">
+      {/* ✅ Toast Popup */}
+      {showToast && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            backgroundColor: "#28a745",
+            color: "#fff",
+            padding: "12px 20px",
+            borderRadius: "8px",
+            boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
+            zIndex: 9999,
+            fontWeight: "500",
+            transition: "all 0.3s ease",
+          }}
+        >
+          Registration Successful 🎉
+        </div>
+      )}
+
       <div className="auth-card">
         <h2>Student Registration</h2>
 
@@ -118,12 +140,14 @@ export default function StudentRegister() {
             {loading ? "Registering..." : "Register"}
           </button>
 
+          {/* ✅ Success Message */}
           {successMessage && (
             <p style={{ color: "green", marginTop: "10px" }}>
               {successMessage}
             </p>
           )}
 
+          {/* ❌ Error Message */}
           {errorMessage && (
             <p style={{ color: "red", marginTop: "10px" }}>
               {errorMessage}

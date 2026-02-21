@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/Login.css";
 
@@ -8,24 +8,50 @@ import hero from "../../assets/images/hero.png";
 
 export default function StudentLogin() {
   const navigate = useNavigate();
-  const location = useLocation();
+
+  const [activeTab, setActiveTab] = useState("login");
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [showLoginPass, setShowLoginPass] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [regEmail, setRegEmail] = useState("");
+  const [regStudentId, setRegStudentId] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regConfirmPassword, setRegConfirmPassword] = useState("");
+  const [showRegPass, setShowRegPass] = useState(false);
+  const [showRegConfirmPass, setShowRegConfirmPass] = useState(false);
+
+  const [formErrors, setFormErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
 
-  /* 🔥 Show success toast if redirected from register */
-  useEffect(() => {
-    if (location.state?.registered) {
-      setShowToast(true);
+  /* ---------------- VALIDATIONS ---------------- */
+  const emailValid = useMemo(() => {
+    const val = regEmail.trim();
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return val.length > 0 && regex.test(val);
+  }, [regEmail]);
 
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-    }
-  }, [location]);
+  const studentIdValid = useMemo(() => {
+    const val = regStudentId.trim();
+    return /^[0-9]{7}$/.test(val);
+  }, [regStudentId]);
+
+  const passwordValid = useMemo(() => {
+    const val = regPassword.trim();
+    const hasMin = val.length >= 6;
+    const hasLetter = /[A-Za-z]/.test(val);
+    const hasNumber = /[0-9]/.test(val);
+    return val.length > 0 && hasMin && hasLetter && hasNumber;
+  }, [regPassword]);
+
+  const confirmPasswordValid = useMemo(() => {
+    const pass = regPassword.trim();
+    const confirm = regConfirmPassword.trim();
+    return confirm.length > 0 && pass === confirm;
+  }, [regPassword, regConfirmPassword]);
 
   /* ---------------- LOGIN ---------------- */
   const handleLogin = async () => {
@@ -53,6 +79,64 @@ export default function StudentLogin() {
     }
   };
 
+  /* ---------------- REGISTER ---------------- */
+  const handleRegister = async () => {
+    const email = regEmail.trim();
+    const studentId = regStudentId.trim();
+    const password = regPassword.trim();
+    const confirmPassword = regConfirmPassword.trim();
+
+    let errors = {};
+
+    if (!email) errors.email = "Email is required";
+    else if (!emailValid) errors.email = "Enter a valid email address";
+
+    if (!studentId) errors.studentId = "Student ID is required";
+    else if (!studentIdValid)
+      errors.studentId = "Student ID must be exactly 7 digits";
+
+    if (!password) errors.password = "Password is required";
+    else if (!passwordValid)
+      errors.password =
+        "Password must be minimum 6 characters with letters & numbers";
+
+    if (!confirmPassword)
+      errors.confirmPassword = "Please confirm your password";
+    else if (!confirmPasswordValid)
+      errors.confirmPassword = "Passwords do not match";
+
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    try {
+      await axios.post(
+        "https://college-placement-backend-fup4.onrender.com/api/auth/register",
+        { email, studentId, password }
+      );
+
+      setSuccessMessage("Registration successful! Redirecting to login...");
+      setShowToast(true);
+
+      setTimeout(() => {
+        setActiveTab("login");
+        setRegEmail("");
+        setRegStudentId("");
+        setRegPassword("");
+        setRegConfirmPassword("");
+        setShowRegPass(false);
+        setShowRegConfirmPass(false);
+        setFormErrors({});
+        setSuccessMessage("");
+        setShowToast(false);
+      }, 2000);
+
+    } catch (error) {
+      setFormErrors({
+        general: error.response?.data?.message || "Registration failed",
+      });
+    }
+  };
+
   return (
     <div className="login-wrapper">
       {showToast && (
@@ -70,7 +154,7 @@ export default function StudentLogin() {
             fontWeight: "500",
           }}
         >
-          Registration Successful 🎉 Please login.
+          Registration Successful 🎉
         </div>
       )}
 
@@ -79,42 +163,153 @@ export default function StudentLogin() {
         <h1 className="project-title">Welcome to College Placement Cell</h1>
 
         <div className="auth-card shadow">
-          <div className="form-area">
-            <h3 className="text-center">Student Login</h3>
-
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Email"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-            />
-
-            <div className="password-wrapper">
-              <input
-                type={showLoginPass ? "text" : "password"}
-                className="form-control"
-                placeholder="Password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                className="show-hide-btn"
-                onClick={() => setShowLoginPass(!showLoginPass)}
-              >
-                {showLoginPass ? "Hide" : "Show"}
-              </button>
-            </div>
+          <div className="tab-container">
+            <button
+              className={activeTab === "login" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("login")}
+              type="button"
+            >
+              Login
+            </button>
 
             <button
-              className="primary-btn w-100"
-              onClick={handleLogin}
-              disabled={loading}
+              className={activeTab === "register" ? "tab active" : "tab"}
+              onClick={() => setActiveTab("register")}
+              type="button"
             >
-              {loading ? "Logging in..." : "Login"}
+              Register
             </button>
           </div>
+
+          {activeTab === "login" && (
+            <div className="form-area">
+              <h3 className="text-center">Student Login</h3>
+
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+              />
+
+              <div className="password-wrapper">
+                <input
+                  type={showLoginPass ? "text" : "password"}
+                  className="form-control"
+                  placeholder="Password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="show-hide-btn"
+                  onClick={() => setShowLoginPass(!showLoginPass)}
+                >
+                  {showLoginPass ? "Hide" : "Show"}
+                </button>
+              </div>
+
+              <button
+                className="primary-btn w-100"
+                onClick={handleLogin}
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
+            </div>
+          )}
+
+          {activeTab === "register" && (
+            <div className="form-area">
+              <h3 className="text-center">Student Registration</h3>
+
+              {successMessage && (
+                <p style={{ color: "green", textAlign: "center" }}>
+                  {successMessage}
+                </p>
+              )}
+
+              {formErrors.general && (
+                <p className="error-message text-center">
+                  {formErrors.general}
+                </p>
+              )}
+
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Email"
+                value={regEmail}
+                onChange={(e) => setRegEmail(e.target.value)}
+              />
+              {formErrors.email && (
+                <p className="error-message">{formErrors.email}</p>
+              )}
+
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Student ID"
+                value={regStudentId}
+                onChange={(e) =>
+                  setRegStudentId(e.target.value.replace(/[^0-9]/g, ""))
+                }
+                maxLength={7}
+              />
+              {formErrors.studentId && (
+                <p className="error-message">{formErrors.studentId}</p>
+              )}
+
+              <div className="password-wrapper">
+                <input
+                  type={showRegPass ? "text" : "password"}
+                  className="form-control"
+                  placeholder="Password"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="show-hide-btn"
+                  onClick={() => setShowRegPass(!showRegPass)}
+                >
+                  {showRegPass ? "Hide" : "Show"}
+                </button>
+              </div>
+              {formErrors.password && (
+                <p className="error-message">{formErrors.password}</p>
+              )}
+
+              <div className="password-wrapper">
+                <input
+                  type={showRegConfirmPass ? "text" : "password"}
+                  className="form-control"
+                  placeholder="Re-enter Password"
+                  value={regConfirmPassword}
+                  onChange={(e) => setRegConfirmPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="show-hide-btn"
+                  onClick={() =>
+                    setShowRegConfirmPass(!showRegConfirmPass)
+                  }
+                >
+                  {showRegConfirmPass ? "Hide" : "Show"}
+                </button>
+              </div>
+              {formErrors.confirmPassword && (
+                <p className="error-message">
+                  {formErrors.confirmPassword}
+                </p>
+              )}
+
+              <button className="success-btn w-100" onClick={handleRegister}>
+                Register
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
