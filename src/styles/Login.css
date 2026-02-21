@@ -320,3 +320,13 @@ color:#dc3545;
 font-size:13px;
 margin-top:4px;
 }
+.status-icon{
+right:45px;
+top:14px;
+font-size:18px;
+position:absolute;
+}
+
+.password-wrapper .status-icon{
+right:75px;
+}
