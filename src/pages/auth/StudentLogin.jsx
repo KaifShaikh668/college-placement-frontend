@@ -30,7 +30,6 @@ const [showToast,setShowToast]=useState(false);
 
 /* ---------- VALIDATION ---------- */
 
-/* ✅ STRICT REAL EMAIL */
 const emailValid = useMemo(()=>{
 return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(regEmail.trim());
 },[regEmail]);
@@ -146,7 +145,7 @@ Register
 </button>
 </div>
 
-{/* LOGIN */}
+{/* ================= LOGIN ================= */}
 {activeTab==="login"&&(
 <div className="form-area">
 
@@ -187,14 +186,29 @@ disabled={loading}
 {loading?"Logging in...":"Login"}
 </button>
 
+{/* ✅ FORGOT PASSWORD */}
+<button
+className="back-link-btn"
+onClick={()=>navigate("/forgot-password")}
+>
+Forgot Password?
+</button>
+
+{/* ✅ ADMIN LOGIN ROUTE */}
+<button
+className="admin-login-btn"
+onClick={()=>navigate("/admin/login")}
+>
+Admin Login
+</button>
+
 </div>
 )}
 
-{/* REGISTER */}
+{/* ================= REGISTER ================= */}
 {activeTab==="register"&&(
 <div className="form-area">
 
-{/* EMAIL */}
 <div className="input-with-status">
 <input
 className="form-control"
@@ -210,7 +224,6 @@ onChange={(e)=>setRegEmail(e.target.value)}
 }
 </div>
 
-{/* STUDENT ID */}
 <div className="input-with-status">
 <input
 className="form-control"
@@ -230,7 +243,6 @@ e.target.value.replace(/[^0-9]/g,"")
 }
 </div>
 
-{/* PASSWORD */}
 <div className="password-wrapper input-with-status">
 
 <input
@@ -265,7 +277,6 @@ Minimum 6 characters with
 </p>
 )}
 
-{/* CONFIRM */}
 <div className="password-wrapper input-with-status">
 
 <input

@@ -9,6 +9,7 @@ import Departments from "./pages/public/Departments";
 import StudentLogin from "./pages/auth/StudentLogin";
 import StudentRegister from "./pages/auth/StudentRegister";
 import AdminLogin from "./pages/auth/AdminLogin";
+import ForgotPassword from "./pages/auth/ForgotPassword"; // ✅ ADDED
 
 // STUDENT PAGES
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -50,6 +51,7 @@ function App() {
         <Route path="/login/student" element={<StudentLogin />} />
         <Route path="/register/student" element={<StudentRegister />} />
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} /> {/* ✅ ADDED */}
 
         {/* ================= STUDENT ROUTES ================= */}
         <Route
