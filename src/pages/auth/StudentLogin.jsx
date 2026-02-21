@@ -20,8 +20,6 @@ export default function StudentLogin() {
   const [regStudentId, setRegStudentId] = useState("");
   const [regPassword, setRegPassword] = useState("");
   const [regConfirmPassword, setRegConfirmPassword] = useState("");
-  const [showRegPass, setShowRegPass] = useState(false);
-  const [showRegConfirmPass, setShowRegConfirmPass] = useState(false);
 
   const [formErrors, setFormErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
@@ -124,8 +122,6 @@ export default function StudentLogin() {
         setRegStudentId("");
         setRegPassword("");
         setRegConfirmPassword("");
-        setShowRegPass(false);
-        setShowRegConfirmPass(false);
         setFormErrors({});
         setSuccessMessage("");
         setShowToast(false);
@@ -237,10 +233,40 @@ export default function StudentLogin() {
                 </p>
               )}
 
-              {/* Keep rest of your register form exactly same */}
-              {/* (No logic removed, only success system added) */}
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Email"
+                value={regEmail}
+                onChange={(e) => setRegEmail(e.target.value)}
+              />
 
-              {/* ... your existing inputs remain unchanged ... */}
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Student ID"
+                value={regStudentId}
+                onChange={(e) =>
+                  setRegStudentId(e.target.value.replace(/[^0-9]/g, ""))
+                }
+                maxLength={7}
+              />
+
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Password"
+                value={regPassword}
+                onChange={(e) => setRegPassword(e.target.value)}
+              />
+
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Re-enter Password"
+                value={regConfirmPassword}
+                onChange={(e) => setRegConfirmPassword(e.target.value)}
+              />
 
               <button className="success-btn w-100" onClick={handleRegister}>
                 Register
