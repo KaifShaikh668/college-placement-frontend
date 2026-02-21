@@ -52,24 +52,17 @@ export default function StudentRegister() {
       const res = await axios.post(
         "https://college-placement-backend-fup4.onrender.com/api/auth/register",
         {
-          studentId: formData.studentId,
-          email: formData.email,
-          password: formData.password,
+          studentId: formData.studentId.trim(),
+          email: formData.email.trim().toLowerCase(),
+          password: formData.password.trim(),
         }
       );
 
-      // ✅ Success message under form
-      setSuccessMessage(res.data.message);
-
-      // ✅ Toast popup
+      // ✅ Set success message
+      setSuccessMessage(res.data.message || "Registration successful!");
       setShowToast(true);
 
-      // Auto hide toast
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-
-      // ✅ Auto redirect after 2 seconds
+      // ✅ Single timeout for redirect
       setTimeout(() => {
         navigate("/login/student");
       }, 2000);
@@ -100,6 +93,7 @@ export default function StudentRegister() {
             boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
             zIndex: 9999,
             fontWeight: "500",
+            transition: "all 0.3s ease",
           }}
         >
           Registration Successful 🎉
@@ -146,7 +140,7 @@ export default function StudentRegister() {
             {loading ? "Registering..." : "Register"}
           </button>
 
-          {/* ✅ Green Success Message */}
+          {/* ✅ Success Message */}
           {successMessage && (
             <p style={{ color: "green", marginTop: "10px" }}>
               {successMessage}
