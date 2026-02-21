@@ -1,160 +1,169 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import "../../styles/Login.css";
 
 export default function StudentRegister() {
-  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    studentId: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showToast, setShowToast] = useState(false);
+const [formData,setFormData]=useState({
+ studentId:"",
+ email:"",
+ password:"",
+ confirmPassword:""
+});
 
-  function handleChange(e) {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  }
+const [loading,setLoading]=useState(false);
+const [showToast,setShowToast]=useState(false);
 
-  async function handleRegister(e) {
-    e.preventDefault();
+/* ---------- VALIDATION ---------- */
 
-    setErrorMessage("");
-    setSuccessMessage("");
+const emailValid =
+/^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com)$/
+.test(formData.email);
 
-    if (
-      !formData.studentId ||
-      !formData.email ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
-      setErrorMessage("All fields are required");
-      return;
-    }
+const studentIdValid=/^\d{7}$/
+.test(formData.studentId);
 
-    if (formData.password !== formData.confirmPassword) {
-      setErrorMessage("Passwords do not match");
-      return;
-    }
+const passwordValid=(()=>{
+ const v=formData.password;
+ return(
+  v.length>=6 &&
+  (v.match(/\d/g)||[]).length>=3 &&
+  /[!@#$%^&*]/.test(v) &&
+  /[A-Za-z]/.test(v)
+ );
+})();
 
-    try {
-      setLoading(true);
+const confirmPasswordValid=
+formData.password===formData.confirmPassword &&
+formData.confirmPassword.length>0;
 
-      const res = await axios.post(
-        "https://college-placement-backend-fup4.onrender.com/api/auth/register",
-        {
-          studentId: formData.studentId.trim(),
-          email: formData.email.trim().toLowerCase(),
-          password: formData.password.trim(),
-        }
-      );
+function handleChange(e){
+ setFormData({
+  ...formData,
+  [e.target.name]:e.target.value
+ });
+}
 
-      // ✅ Set success message
-      setSuccessMessage(res.data.message || "Registration successful!");
-      setShowToast(true);
+async function handleRegister(e){
+ e.preventDefault();
 
-      // ✅ Single timeout for redirect
-      setTimeout(() => {
-        navigate("/login/student");
-      }, 2000);
+ if(!emailValid||
+    !studentIdValid||
+    !passwordValid||
+    !confirmPasswordValid) return;
 
-    } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message ||
-        "Registration failed. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
+ try{
+  setLoading(true);
 
-  return (
-    <div className="auth-container">
-      {/* ✅ Toast Popup */}
-      {showToast && (
-        <div
-          style={{
-            position: "fixed",
-            top: "20px",
-            right: "20px",
-            backgroundColor: "#28a745",
-            color: "#fff",
-            padding: "12px 20px",
-            borderRadius: "8px",
-            boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
-            zIndex: 9999,
-            fontWeight: "500",
-            transition: "all 0.3s ease",
-          }}
-        >
-          Registration Successful 🎉
-        </div>
-      )}
-
-      <div className="auth-card">
-        <h2>Student Registration</h2>
-
-        <form onSubmit={handleRegister}>
-          <input
-            type="text"
-            name="studentId"
-            placeholder="Student ID"
-            value={formData.studentId}
-            onChange={handleChange}
-          />
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
-
-          <button type="submit" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
-          </button>
-
-          {/* ✅ Success Message */}
-          {successMessage && (
-            <p style={{ color: "green", marginTop: "10px" }}>
-              {successMessage}
-            </p>
-          )}
-
-          {/* ❌ Error Message */}
-          {errorMessage && (
-            <p style={{ color: "red", marginTop: "10px" }}>
-              {errorMessage}
-            </p>
-          )}
-        </form>
-      </div>
-    </div>
+  await axios.post(
+   "https://college-placement-backend-fup4.onrender.com/api/auth/register",
+   {
+    studentId:formData.studentId.trim(),
+    email:formData.email.trim(),
+    password:formData.password.trim()
+   }
   );
+
+  setShowToast(true);
+
+  setTimeout(()=>{
+   navigate("/login/student");
+  },2000);
+
+ }finally{
+  setLoading(false);
+ }
+}
+
+return(
+<div className="auth-container">
+
+{showToast &&
+<div className="toast-success">
+ Registration Successful 🎉
+</div>}
+
+<div className="auth-card">
+<h2>Student Registration</h2>
+
+<form onSubmit={handleRegister}>
+
+<div className="input-group">
+<input
+ name="studentId"
+ placeholder="Student ID"
+ value={formData.studentId}
+ onChange={handleChange}
+/>
+{formData.studentId &&
+(studentIdValid ?
+<FaCheckCircle className="valid-icon"/> :
+<FaTimesCircle className="invalid-icon"/>
+)}
+</div>
+
+<div className="input-group">
+<input
+ name="email"
+ placeholder="Email"
+ value={formData.email}
+ onChange={handleChange}
+/>
+{formData.email &&
+(emailValid ?
+<FaCheckCircle className="valid-icon"/> :
+<FaTimesCircle className="invalid-icon"/>
+)}
+</div>
+
+<div className="input-group">
+<input
+ type="password"
+ name="password"
+ placeholder="Password"
+ value={formData.password}
+ onChange={handleChange}
+/>
+{formData.password &&
+(passwordValid ?
+<FaCheckCircle className="valid-icon"/> :
+<FaTimesCircle className="invalid-icon"/>
+)}
+</div>
+
+<div className="input-group">
+<input
+ type="password"
+ name="confirmPassword"
+ placeholder="Confirm Password"
+ value={formData.confirmPassword}
+ onChange={handleChange}
+/>
+{formData.confirmPassword &&
+(confirmPasswordValid ?
+<FaCheckCircle className="valid-icon"/> :
+<FaTimesCircle className="invalid-icon"/>
+)}
+</div>
+
+<button
+type="submit"
+disabled={
+ !emailValid||
+ !studentIdValid||
+ !passwordValid||
+ !confirmPasswordValid||
+ loading
+}>
+{loading?"Registering...":"Register"}
+</button>
+
+</form>
+</div>
+</div>
+);
 }

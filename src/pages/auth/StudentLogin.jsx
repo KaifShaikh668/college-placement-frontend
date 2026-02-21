@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import "../../styles/Login.css";
 
 import logo from "../../assets/images/logo.png";
@@ -24,97 +25,83 @@ export default function StudentLogin() {
   const [showRegConfirmPass, setShowRegConfirmPass] = useState(false);
 
   const [formErrors, setFormErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
 
   /* ---------------- VALIDATIONS ---------------- */
+
   const emailValid = useMemo(() => {
-    const val = regEmail.trim();
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return val.length > 0 && regex.test(val);
+    return /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com)$/.test(
+      regEmail.trim()
+    );
   }, [regEmail]);
 
   const studentIdValid = useMemo(() => {
-    const val = regStudentId.trim();
-    return /^[0-9]{7}$/.test(val);
+    return /^\d{7}$/.test(regStudentId.trim());
   }, [regStudentId]);
 
   const passwordValid = useMemo(() => {
-    const val = regPassword.trim();
-    const hasMin = val.length >= 6;
-    const hasLetter = /[A-Za-z]/.test(val);
-    const hasNumber = /[0-9]/.test(val);
-    return val.length > 0 && hasMin && hasLetter && hasNumber;
+    const val = regPassword;
+    return (
+      val.length >= 6 &&
+      (val.match(/\d/g) || []).length >= 3 &&
+      /[!@#$%^&*]/.test(val) &&
+      /[A-Za-z]/.test(val)
+    );
   }, [regPassword]);
 
   const confirmPasswordValid = useMemo(() => {
-    const pass = regPassword.trim();
-    const confirm = regConfirmPassword.trim();
-    return confirm.length > 0 && pass === confirm;
+    return (
+      regConfirmPassword.length > 0 &&
+      regPassword === regConfirmPassword
+    );
   }, [regPassword, regConfirmPassword]);
 
   /* ---------------- LOGIN ---------------- */
-  const handleLogin = async () => {
-    const email = loginEmail.trim();
-    const password = loginPassword.trim();
 
-    if (!email || !password) return;
+  const handleLogin = async () => {
+    if (!loginEmail || !loginPassword) return;
 
     try {
       setLoading(true);
 
       const res = await axios.post(
         "https://college-placement-backend-fup4.onrender.com/api/auth/login",
-        { email, password }
+        {
+          email: loginEmail.trim(),
+          password: loginPassword.trim(),
+        }
       );
 
       localStorage.setItem("studentToken", res.data.token);
       localStorage.setItem("student", JSON.stringify(res.data.user));
 
       navigate("/student/dashboard");
-    } catch (error) {
-      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   /* ---------------- REGISTER ---------------- */
+
   const handleRegister = async () => {
-    const email = regEmail.trim();
-    const studentId = regStudentId.trim();
-    const password = regPassword.trim();
-    const confirmPassword = regConfirmPassword.trim();
-
-    let errors = {};
-
-    if (!email) errors.email = "Email is required";
-    else if (!emailValid) errors.email = "Enter a valid email address";
-
-    if (!studentId) errors.studentId = "Student ID is required";
-    else if (!studentIdValid)
-      errors.studentId = "Student ID must be exactly 7 digits";
-
-    if (!password) errors.password = "Password is required";
-    else if (!passwordValid)
-      errors.password =
-        "Password must be minimum 6 characters with letters & numbers";
-
-    if (!confirmPassword)
-      errors.confirmPassword = "Please confirm your password";
-    else if (!confirmPasswordValid)
-      errors.confirmPassword = "Passwords do not match";
-
-    setFormErrors(errors);
-    if (Object.keys(errors).length > 0) return;
+    if (
+      !emailValid ||
+      !studentIdValid ||
+      !passwordValid ||
+      !confirmPasswordValid
+    )
+      return;
 
     try {
       await axios.post(
         "https://college-placement-backend-fup4.onrender.com/api/auth/register",
-        { email, studentId, password }
+        {
+          email: regEmail.trim(),
+          studentId: regStudentId.trim(),
+          password: regPassword.trim(),
+        }
       );
 
-      setSuccessMessage("Registration successful! Redirecting to login...");
       setShowToast(true);
 
       setTimeout(() => {
@@ -123,16 +110,12 @@ export default function StudentLogin() {
         setRegStudentId("");
         setRegPassword("");
         setRegConfirmPassword("");
-        setShowRegPass(false);
-        setShowRegConfirmPass(false);
-        setFormErrors({});
-        setSuccessMessage("");
         setShowToast(false);
       }, 2000);
-
-    } catch (error) {
+    } catch (err) {
       setFormErrors({
-        general: error.response?.data?.message || "Registration failed",
+        general:
+          err.response?.data?.message || "Registration failed",
       });
     }
   };
@@ -140,34 +123,24 @@ export default function StudentLogin() {
   return (
     <div className="login-wrapper">
       {showToast && (
-        <div
-          style={{
-            position: "fixed",
-            top: "20px",
-            right: "20px",
-            backgroundColor: "#28a745",
-            color: "#fff",
-            padding: "12px 20px",
-            borderRadius: "8px",
-            boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
-            zIndex: 9999,
-            fontWeight: "500",
-          }}
-        >
+        <div className="toast-success">
           Registration Successful 🎉
         </div>
       )}
 
       <div className="left-panel">
         <img src={logo} alt="Logo" className="login-logo" />
-        <h1 className="project-title">Welcome to College Placement Cell</h1>
+        <h1 className="project-title">
+          Welcome to College Placement Cell
+        </h1>
 
         <div className="auth-card shadow">
+
+          {/* ---------- TABS ---------- */}
           <div className="tab-container">
             <button
               className={activeTab === "login" ? "tab active" : "tab"}
               onClick={() => setActiveTab("login")}
-              type="button"
             >
               Login
             </button>
@@ -175,22 +148,23 @@ export default function StudentLogin() {
             <button
               className={activeTab === "register" ? "tab active" : "tab"}
               onClick={() => setActiveTab("register")}
-              type="button"
             >
               Register
             </button>
           </div>
 
+          {/* ---------- LOGIN ---------- */}
           {activeTab === "login" && (
             <div className="form-area">
-              <h3 className="text-center">Student Login</h3>
+              <h3>Student Login</h3>
 
               <input
-                type="text"
                 className="form-control"
                 placeholder="Email"
                 value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
+                onChange={(e) =>
+                  setLoginEmail(e.target.value)
+                }
               />
 
               <div className="password-wrapper">
@@ -199,12 +173,17 @@ export default function StudentLogin() {
                   className="form-control"
                   placeholder="Password"
                   value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
+                  onChange={(e) =>
+                    setLoginPassword(e.target.value)
+                  }
                 />
+
                 <button
                   type="button"
                   className="show-hide-btn"
-                  onClick={() => setShowLoginPass(!showLoginPass)}
+                  onClick={() =>
+                    setShowLoginPass(!showLoginPass)
+                  }
                 >
                   {showLoginPass ? "Hide" : "Show"}
                 </button>
@@ -220,92 +199,126 @@ export default function StudentLogin() {
             </div>
           )}
 
+          {/* ---------- REGISTER ---------- */}
           {activeTab === "register" && (
             <div className="form-area">
-              <h3 className="text-center">Student Registration</h3>
+              <h3>Student Registration</h3>
 
-              {successMessage && (
-                <p style={{ color: "green", textAlign: "center" }}>
-                  {successMessage}
-                </p>
-              )}
+              {/* EMAIL */}
+              <div className="input-group">
+                <input
+                  className="form-control"
+                  placeholder="Email"
+                  value={regEmail}
+                  onChange={(e) =>
+                    setRegEmail(e.target.value)
+                  }
+                />
+                {regEmail &&
+                  (emailValid ? (
+                    <FaCheckCircle className="valid-icon"/>
+                  ) : (
+                    <FaTimesCircle className="invalid-icon"/>
+                  ))}
+              </div>
 
-              {formErrors.general && (
-                <p className="error-message text-center">
-                  {formErrors.general}
-                </p>
-              )}
+              {/* STUDENT ID */}
+              <div className="input-group">
+                <input
+                  className="form-control"
+                  placeholder="Student ID"
+                  maxLength={7}
+                  value={regStudentId}
+                  onChange={(e) =>
+                    setRegStudentId(
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
+                  }
+                />
+                {regStudentId &&
+                  (studentIdValid ? (
+                    <FaCheckCircle className="valid-icon"/>
+                  ) : (
+                    <FaTimesCircle className="invalid-icon"/>
+                  ))}
+              </div>
 
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Email"
-                value={regEmail}
-                onChange={(e) => setRegEmail(e.target.value)}
-              />
-              {formErrors.email && (
-                <p className="error-message">{formErrors.email}</p>
-              )}
-
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Student ID"
-                value={regStudentId}
-                onChange={(e) =>
-                  setRegStudentId(e.target.value.replace(/[^0-9]/g, ""))
-                }
-                maxLength={7}
-              />
-              {formErrors.studentId && (
-                <p className="error-message">{formErrors.studentId}</p>
-              )}
-
-              <div className="password-wrapper">
+              {/* PASSWORD */}
+              <div className="password-wrapper input-group">
                 <input
                   type={showRegPass ? "text" : "password"}
                   className="form-control"
                   placeholder="Password"
                   value={regPassword}
-                  onChange={(e) => setRegPassword(e.target.value)}
+                  onChange={(e) =>
+                    setRegPassword(e.target.value)
+                  }
                 />
-                <button
-                  type="button"
-                  className="show-hide-btn"
-                  onClick={() => setShowRegPass(!showRegPass)}
-                >
-                  {showRegPass ? "Hide" : "Show"}
-                </button>
-              </div>
-              {formErrors.password && (
-                <p className="error-message">{formErrors.password}</p>
-              )}
 
-              <div className="password-wrapper">
-                <input
-                  type={showRegConfirmPass ? "text" : "password"}
-                  className="form-control"
-                  placeholder="Re-enter Password"
-                  value={regConfirmPassword}
-                  onChange={(e) => setRegConfirmPassword(e.target.value)}
-                />
                 <button
                   type="button"
                   className="show-hide-btn"
                   onClick={() =>
-                    setShowRegConfirmPass(!showRegConfirmPass)
+                    setShowRegPass(!showRegPass)
                   }
                 >
-                  {showRegConfirmPass ? "Hide" : "Show"}
+                  {showRegPass ? "Hide" : "Show"}
                 </button>
-              </div>
-              {formErrors.confirmPassword && (
-                <p className="error-message">
-                  {formErrors.confirmPassword}
-                </p>
-              )}
 
-              <button className="success-btn w-100" onClick={handleRegister}>
+                {regPassword &&
+                  (passwordValid ? (
+                    <FaCheckCircle className="valid-icon"/>
+                  ) : (
+                    <FaTimesCircle className="invalid-icon"/>
+                  ))}
+              </div>
+
+              {/* CONFIRM PASSWORD */}
+              <div className="password-wrapper input-group">
+                <input
+                  type={
+                    showRegConfirmPass ? "text" : "password"
+                  }
+                  className="form-control"
+                  placeholder="Re-enter Password"
+                  value={regConfirmPassword}
+                  onChange={(e) =>
+                    setRegConfirmPassword(e.target.value)
+                  }
+                />
+
+                <button
+                  type="button"
+                  className="show-hide-btn"
+                  onClick={() =>
+                    setShowRegConfirmPass(
+                      !showRegConfirmPass
+                    )
+                  }
+                >
+                  {showRegConfirmPass
+                    ? "Hide"
+                    : "Show"}
+                </button>
+
+                {regConfirmPassword &&
+                  (confirmPasswordValid ? (
+                    <FaCheckCircle className="valid-icon"/>
+                  ) : (
+                    <FaTimesCircle className="invalid-icon"/>
+                  ))}
+              </div>
+
+              <button
+                className="success-btn w-100"
+                onClick={handleRegister}
+                disabled={
+                  !emailValid ||
+                  !studentIdValid ||
+                  !passwordValid ||
+                  !confirmPasswordValid
+                }
+              >
                 Register
               </button>
             </div>
@@ -314,7 +327,7 @@ export default function StudentLogin() {
       </div>
 
       <div className="right-panel">
-        <img src={hero} alt="Placement Illustration" className="hero-img" />
+        <img src={hero} alt="Hero" className="hero-img"/>
       </div>
     </div>
   );
