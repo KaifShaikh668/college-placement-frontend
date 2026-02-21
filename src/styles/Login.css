@@ -307,3 +307,16 @@ button.btn-success {
     transform: translateY(0);
   }
 }
+.valid-input{
+border:2px solid #28a745 !important;
+}
+
+.invalid-input{
+border:2px solid #dc3545 !important;
+}
+
+.error-message{
+color:#dc3545;
+font-size:13px;
+margin-top:4px;
+}
