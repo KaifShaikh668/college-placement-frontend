@@ -53,28 +53,49 @@ regPassword===regConfirmPassword;
 
 /* ---------- LOGIN ---------- */
 
-const handleLogin=async()=>{
+const handleLogin = async () => {
 
-if(!loginEmail||!loginPassword)return;
+if(!loginEmail.trim() || !loginPassword.trim()){
+alert("Enter email and password");
+return;
+}
 
 try{
 setLoading(true);
+
+/* ✅ CLEAR OLD TOKENS */
+localStorage.removeItem("adminToken");
 
 const res = await API.post("/auth/login",{
 email:loginEmail.trim(),
 password:loginPassword.trim()
 });
 
+/* ✅ SAFETY CHECK */
+if(!res?.data?.token){
+throw new Error("Token not received");
+}
+
+/* ✅ SAVE LOGIN DATA */
 localStorage.setItem("studentToken",res.data.token);
 localStorage.setItem(
 "student",
 JSON.stringify(res.data.user)
 );
 
+/* ✅ NAVIGATE */
 navigate("/student/dashboard");
 
 }catch(error){
-alert(error.response?.data?.message || "Login failed");
+
+console.error("Login Error:",error);
+
+alert(
+error?.response?.data?.message ||
+error.message ||
+"Login failed"
+);
+
 }finally{
 setLoading(false);
 }
@@ -82,7 +103,7 @@ setLoading(false);
 
 /* ---------- REGISTER ---------- */
 
-const handleRegister=async()=>{
+const handleRegister = async () => {
 
 if(!emailValid||
 !studentIdValid||
