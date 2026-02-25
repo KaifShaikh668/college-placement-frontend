@@ -480,7 +480,7 @@ const Home = () => {
               <div className="placed-top">
                 <h1>Students Who Got Placed</h1>
                 <p>
-                  Below is a demo list of students who got placed through the
+                  Below is a list of students who got placed through the
                   Placement Cell. This includes the year of placement,
                   department, and company.
                 </p>
