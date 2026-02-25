@@ -282,7 +282,7 @@ const Home = () => {
               {/* FACULTY QUICK OVERVIEW */}
               <div className="dept-overview-grid">
                 <div className="dept-overview-card">
-                  <h3>🔬 Faculty of Science</h3>
+                  <h3>🔬 Department of Science</h3>
                   <p>
                     Focuses on technical learning, analytical thinking, practical
                     labs, and research-based knowledge.
@@ -296,7 +296,7 @@ const Home = () => {
                 </div>
 
                 <div className="dept-overview-card">
-                  <h3>🎨 Faculty of Arts</h3>
+                  <h3>🎨 Department of Arts</h3>
                   <p>
                     Enhances communication, humanities understanding, creativity,
                     and professional personality development.
@@ -310,7 +310,7 @@ const Home = () => {
                 </div>
 
                 <div className="dept-overview-card">
-                  <h3>📊 Faculty of Commerce</h3>
+                  <h3>📊 Department of Commerce</h3>
                   <p>
                     Builds strong foundation in business studies, accounting,
                     finance, and management for corporate careers.
@@ -326,9 +326,9 @@ const Home = () => {
 
               {/* ✅ SCIENCE DETAILS */}
               <div className="faculty-section" id="science">
-                <h2>🔬 Faculty of Science</h2>
+                <h2>🔬 Department of Science</h2>
                 <p className="faculty-desc">
-                  The Faculty of Science provides strong academic and practical
+                  The Department of Science provides strong academic and practical
                   learning. Students are trained in problem solving, programming,
                   lab skills, and research methods which help them in placements
                   and higher studies.
@@ -369,9 +369,9 @@ const Home = () => {
 
               {/* ✅ ARTS DETAILS */}
               <div className="faculty-section" id="arts">
-                <h2>🎨 Faculty of Arts</h2>
+                <h2>🎨 Department of Arts</h2>
                 <p className="faculty-desc">
-                  The Faculty of Arts focuses on personality development, strong
+                  The Department of Arts focuses on personality development, strong
                   communication skills, humanities knowledge and professional
                   growth. It supports careers in teaching, HR, media and creative
                   industries.
@@ -412,9 +412,9 @@ const Home = () => {
 
               {/* ✅ COMMERCE DETAILS */}
               <div className="faculty-section" id="commerce">
-                <h2>📊 Faculty of Commerce</h2>
+                <h2>📊 Department of Commerce</h2>
                 <p className="faculty-desc">
-                  The Faculty of Commerce prepares students for business and
+                  The Department of Commerce prepares students for business and
                   corporate careers. Students gain strong knowledge in accounts,
                   taxation, finance, management and business analytics.
                 </p>
