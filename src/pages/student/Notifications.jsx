@@ -1,172 +1,273 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React,{useCallback,useEffect,useMemo,useState} from "react";
 import StudentLayout from "../../layouts/StudentLayout";
 import API from "../../utils/api";
 import "../../styles/Notifications.css";
 
-export default function Notifications() {
-  const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function Notifications(){
 
-  // --------------- MODAL ----------------
-  const [showModal, setShowModal] = useState(false);
-  const [selectedNotice, setSelectedNotice] = useState(null);
+const[notifications,setNotifications]=useState([]);
+const[loading,setLoading]=useState(true);
 
-  // ✅ Format "time ago" (safe)
-  const formatTime = useMemo(() => {
-    return (dateString) => {
-      if (!dateString) return "Just now";
+/* ---------------- MODAL ---------------- */
+const[showModal,setShowModal]=useState(false);
+const[selectedNotice,setSelectedNotice]=useState(null);
 
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return "Just now";
+/* ---------------- TIME FORMAT ---------------- */
+const formatTime=useMemo(()=>{
 
-      const diffSeconds = Math.floor((Date.now() - date.getTime()) / 1000);
+return(dateString)=>{
 
-      if (diffSeconds < 0) return "Just now"; // future date safety
-      if (diffSeconds < 60) return `${diffSeconds}s ago`;
+if(!dateString)return"Just now";
 
-      const mins = Math.floor(diffSeconds / 60);
-      if (mins < 60) return `${mins}m ago`;
+const date=new Date(dateString);
 
-      const hrs = Math.floor(mins / 60);
-      if (hrs < 24) return `${hrs}h ago`;
+if(isNaN(date.getTime()))
+return"Just now";
 
-      const days = Math.floor(hrs / 24);
-      return `${days}d ago`;
-    };
-  }, []);
+const diff=Math.floor(
+(Date.now()-date.getTime())/1000
+);
 
-  // ✅ Fetch notifications from backend
-  const fetchNotifications = useCallback(async () => {
-    try {
-      setLoading(true);
+if(diff<60)return`${diff}s ago`;
 
-      const res = await API.get("/notifications/student");
+const mins=Math.floor(diff/60);
+if(mins<60)return`${mins}m ago`;
 
-      const list = Array.isArray(res.data) ? res.data : [];
+const hrs=Math.floor(mins/60);
+if(hrs<24)return`${hrs}h ago`;
 
-      // ✅ Normalize for UI
-      const formatted = list.map((n) => ({
-        _id: n._id,
-        title: n.title || "",
-        message: n.message || "",
-        time: n.time || n.createdAt || n.notificationCreatedAt || null,
-        status: n.status ? n.status : n.isRead ? "read" : "new",
-      }));
+const days=Math.floor(hrs/24);
+return`${days}d ago`;
+};
 
-      setNotifications(formatted);
-    } catch (error) {
-      console.error("Failed to load notifications:", error);
-      alert("Failed to load notifications");
-      setNotifications([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+},[]);
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications]);
+/* ---------------- FETCH NOTIFICATIONS ---------------- */
+const fetchNotifications=useCallback(async()=>{
 
-  // ✅ Open modal + mark as read (backend)
-  const openModal = async (notice) => {
-    if (!notice?._id) return;
+try{
 
-    setSelectedNotice(notice);
-    setShowModal(true);
+setLoading(true);
 
-    // ✅ Optimistic UI update
-    setNotifications((prev) =>
-      prev.map((n) => (n._id === notice._id ? { ...n, status: "read" } : n))
-    );
+const res=await API.get(
+"/notifications/student"
+);
 
-    // ✅ Mark as read on backend
-    try {
-      await API.put(`/notifications/student/${notice._id}/read`);
-    } catch (error) {
-      console.error("Mark as read failed:", error);
-    }
-  };
+/* ✅ SUPPORT MULTIPLE RESPONSE TYPES */
+const list=Array.isArray(res.data)
+?res.data
+:res.data?.data || [];
 
-  const closeModal = () => {
-    setSelectedNotice(null);
-    setShowModal(false);
-  };
+const formatted=list.map((n)=>({
 
-  return (
-    <StudentLayout>
-      <div className="notifications-wrapper">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "12px",
-          }}
-        >
-          <h2 className="page-title">Notifications</h2>
+_id:n._id,
+title:n.title || "",
+message:n.message || "",
+time:
+n.time ||
+n.createdAt ||
+n.notificationCreatedAt ||
+null,
+status:
+n.status
+?n.status
+:n.isRead
+?"read"
+:"new"
 
-          <button
-            className="view-btn"
-            style={{ width: "140px" }}
-            onClick={fetchNotifications}
-            disabled={loading}
-          >
-            {loading ? "Loading..." : "Refresh"}
-          </button>
-        </div>
+}));
 
-        {loading ? (
-          <p style={{ padding: "16px", color: "#666" }}>
-            Loading notifications...
-          </p>
-        ) : notifications.length === 0 ? (
-          <p style={{ padding: "16px", color: "#666" }}>
-            No notifications found
-          </p>
-        ) : (
-          <div className="notifications-list">
-            {notifications.map((n) => (
-              <div className="notif-card" key={n._id}>
-                <div className="notif-header">
-                  <h3 className="notif-title">{n.title}</h3>
+setNotifications(formatted);
 
-                  <span
-                    className={`notif-badge ${
-                      n.status === "new" ? "new" : "read"
-                    }`}
-                  >
-                    {n.status === "new" ? "NEW" : "READ"}
-                  </span>
-                </div>
+}catch(error){
 
-                <p className="notif-message">{n.message}</p>
-                <p className="notif-time">{formatTime(n.time)}</p>
+console.error(
+"Notification Fetch Error:",
+error?.response || error
+);
 
-                <button className="view-btn" onClick={() => openModal(n)}>
-                  View
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+alert("Failed to load notifications");
 
-        {/* ---------------- MODAL ---------------- */}
-        {showModal && selectedNotice && (
-          <div className="modal-overlay" onClick={closeModal}>
-            <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-              <h2>{selectedNotice.title}</h2>
-              <p className="modal-msg">{selectedNotice.message}</p>
-              <p>
-                <b>Received:</b> {formatTime(selectedNotice.time)}
-              </p>
+setNotifications([]);
 
-              <button className="close-btn" onClick={closeModal}>
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </StudentLayout>
-  );
+}
+finally{
+setLoading(false);
+}
+
+},[]);
+
+useEffect(()=>{
+fetchNotifications();
+},[fetchNotifications]);
+
+/* ---------------- OPEN MODAL ---------------- */
+const openModal=async(notice)=>{
+
+if(!notice?._id)return;
+
+setSelectedNotice(notice);
+setShowModal(true);
+
+/* ✅ OPTIMISTIC UPDATE */
+setNotifications(prev=>
+prev.map(n=>
+n._id===notice._id
+?{...n,status:"read"}
+:n
+)
+);
+
+/* ✅ BACKEND READ UPDATE */
+try{
+await API.put(
+`/notifications/student/${notice._id}/read`
+);
+}catch(error){
+console.error(
+"Mark Read Failed:",
+error?.response || error
+);
+}
+};
+
+const closeModal=()=>{
+setSelectedNotice(null);
+setShowModal(false);
+};
+
+/* ---------------- UI ---------------- */
+return(
+
+<StudentLayout>
+
+<div className="notifications-wrapper">
+
+<div
+style={{
+display:"flex",
+justifyContent:"space-between",
+alignItems:"center",
+gap:"12px"
+}}
+>
+
+<h2 className="page-title">
+Notifications
+</h2>
+
+<button
+className="view-btn"
+style={{width:"140px"}}
+onClick={fetchNotifications}
+disabled={loading}
+>
+{loading?"Loading...":"Refresh"}
+</button>
+
+</div>
+
+{loading?(
+<p style={{padding:"16px",color:"#666"}}>
+Loading notifications...
+</p>
+):notifications.length===0?(
+<p style={{padding:"16px",color:"#666"}}>
+No notifications found
+</p>
+):(
+
+<div className="notifications-list">
+
+{notifications.map(n=>(
+
+<div
+className="notif-card"
+key={n._id}
+>
+
+<div className="notif-header">
+
+<h3 className="notif-title">
+{n.title}
+</h3>
+
+<span
+className={`notif-badge ${
+n.status==="new"
+?"new"
+:"read"
+}`}
+>
+{n.status==="new"
+?"NEW"
+:"READ"}
+</span>
+
+</div>
+
+<p className="notif-message">
+{n.message}
+</p>
+
+<p className="notif-time">
+{formatTime(n.time)}
+</p>
+
+<button
+className="view-btn"
+onClick={()=>openModal(n)}
+>
+View
+</button>
+
+</div>
+
+))}
+
+</div>
+)}
+
+{/* ---------------- MODAL ---------------- */}
+{showModal && selectedNotice &&(
+
+<div
+className="modal-overlay"
+onClick={closeModal}
+>
+
+<div
+className="modal-box"
+onClick={(e)=>e.stopPropagation()}
+>
+
+<h2>
+{selectedNotice.title}
+</h2>
+
+<p className="modal-msg">
+{selectedNotice.message}
+</p>
+
+<p>
+<b>Received:</b>{" "}
+{formatTime(selectedNotice.time)}
+</p>
+
+<button
+className="close-btn"
+onClick={closeModal}
+>
+Close
+</button>
+
+</div>
+
+</div>
+)}
+
+</div>
+
+</StudentLayout>
+);
 }

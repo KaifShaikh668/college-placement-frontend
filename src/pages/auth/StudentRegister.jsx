@@ -1,7 +1,7 @@
 import React,{useState} from "react";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {FaCheckCircle,FaTimesCircle} from "react-icons/fa";
+import API from "../../utils/api";
 import "../../styles/Login.css";
 
 export default function StudentRegister(){
@@ -58,11 +58,11 @@ if(!emailValid||
 !passwordValid||
 !confirmPasswordValid)return;
 
+try{
+
 setLoading(true);
 
-await axios.post(
-"https://college-placement-backend-fup4.onrender.com/api/auth/register",
-{
+await API.post("/auth/register",{
 studentId:formData.studentId.trim(),
 email:formData.email.trim(),
 password:formData.password.trim()
@@ -74,7 +74,12 @@ setTimeout(()=>{
 navigate("/login/student");
 },2000);
 
+}catch(error){
+alert(error.response?.data?.message || "Registration failed");
+}
+finally{
 setLoading(false);
+}
 }
 
 return(
@@ -97,6 +102,7 @@ placeholder="Student ID"
 value={formData.studentId}
 onChange={handleChange}
 />
+
 {formData.studentId &&
 (studentIdValid?
 <FaCheckCircle className="status-icon valid"/>:
@@ -111,6 +117,7 @@ placeholder="Email"
 value={formData.email}
 onChange={handleChange}
 />
+
 {formData.email &&
 (emailValid?
 <FaCheckCircle className="status-icon valid"/>:

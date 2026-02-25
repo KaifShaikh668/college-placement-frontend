@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../../utils/api";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import "../../styles/Login.css";
 
@@ -60,19 +60,21 @@ if(!loginEmail||!loginPassword)return;
 try{
 setLoading(true);
 
-const res=await axios.post(
-"https://college-placement-backend-fup4.onrender.com/api/auth/login",
-{
+const res = await API.post("/auth/login",{
 email:loginEmail.trim(),
 password:loginPassword.trim()
 });
 
 localStorage.setItem("studentToken",res.data.token);
-localStorage.setItem("student",
-JSON.stringify(res.data.user));
+localStorage.setItem(
+"student",
+JSON.stringify(res.data.user)
+);
 
 navigate("/student/dashboard");
 
+}catch(error){
+alert(error.response?.data?.message || "Login failed");
 }finally{
 setLoading(false);
 }
@@ -87,9 +89,9 @@ if(!emailValid||
 !passwordValid||
 !confirmPasswordValid) return;
 
-await axios.post(
-"https://college-placement-backend-fup4.onrender.com/api/auth/register",
-{
+try{
+
+await API.post("/auth/register",{
 email:regEmail.trim(),
 studentId:regStudentId.trim(),
 password:regPassword.trim()
@@ -105,6 +107,10 @@ setRegPassword("");
 setRegConfirmPassword("");
 setShowToast(false);
 },2000);
+
+}catch(error){
+alert(error.response?.data?.message || "Registration failed");
+}
 };
 
 return(
@@ -186,7 +192,6 @@ disabled={loading}
 {loading?"Logging in...":"Login"}
 </button>
 
-{/* ✅ FORGOT PASSWORD */}
 <button
 className="back-link-btn"
 onClick={()=>navigate("/forgot-password")}
@@ -194,7 +199,6 @@ onClick={()=>navigate("/forgot-password")}
 Forgot Password?
 </button>
 
-{/* ✅ ADMIN LOGIN ROUTE */}
 <button
 className="admin-login-btn"
 onClick={()=>navigate("/admin/login")}

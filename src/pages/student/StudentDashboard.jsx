@@ -9,19 +9,23 @@ import Button from "react-bootstrap/Button";
 
 // -------------------- COMPONENT --------------------
 export default function StudentDashboard() {
+
   const navigate = useNavigate();
 
-  // ✅ Student from localStorage (login saves this)
+  // ✅ SAFE STUDENT FETCH
   const student = useMemo(() => {
     try {
-      return JSON.parse(localStorage.getItem("student"));
+      const data = localStorage.getItem("student");
+      return data ? JSON.parse(data) : null;
     } catch {
       return null;
     }
   }, []);
 
   useEffect(() => {
-    if (!student) navigate("/login/student");
+    if (!student) {
+      navigate("/login/student");
+    }
   }, [student, navigate]);
 
   // -------------------- LOGOUT --------------------
@@ -31,23 +35,26 @@ export default function StudentDashboard() {
     navigate("/login/student");
   };
 
-  // -------------------- PROFILE COMPLETION --------------------
+  // ---------------- PROFILE COMPLETION ----------------
   const [completion, setCompletion] = useState(
     Number(localStorage.getItem("profileCompletion")) || 0
   );
 
   useEffect(() => {
     const updateCompletion = () => {
-      setCompletion(Number(localStorage.getItem("profileCompletion")) || 0);
+      setCompletion(
+        Number(localStorage.getItem("profileCompletion")) || 0
+      );
     };
 
     window.addEventListener("storage", updateCompletion);
     updateCompletion();
 
-    return () => window.removeEventListener("storage", updateCompletion);
+    return () =>
+      window.removeEventListener("storage", updateCompletion);
   }, []);
 
-  // -------------------- DASHBOARD STATS (DB) ✅ --------------------
+  // -------------------- STATS --------------------
   const [stats, setStats] = useState({
     totalApplications: 0,
     applied: 0,
@@ -56,22 +63,28 @@ export default function StudentDashboard() {
     rejected: 0,
   });
 
-  // -------------------- NOTIFICATIONS (DB) ✅ --------------------
+  // -------------------- NOTIFICATIONS ----------------
   const [notifications, setNotifications] = useState([]);
   const [notifCount, setNotifCount] = useState(0);
 
   useEffect(() => {
+
     const fetchStats = async () => {
       try {
         const res = await API.get("/student/stats");
 
+        const data =
+          res.data?.data || res.data || {};
+
         setStats({
-          totalApplications: res.data?.totalApplications ?? 0,
-          applied: res.data?.applied ?? 0,
-          shortlisted: res.data?.shortlisted ?? 0,
-          selected: res.data?.selected ?? 0,
-          rejected: res.data?.rejected ?? 0,
+          totalApplications:
+            data.totalApplications ?? 0,
+          applied: data.applied ?? 0,
+          shortlisted: data.shortlisted ?? 0,
+          selected: data.selected ?? 0,
+          rejected: data.rejected ?? 0,
         });
+
       } catch (err) {
         console.error("Stats fetch failed:", err);
       }
@@ -79,34 +92,47 @@ export default function StudentDashboard() {
 
     const fetchNotifications = async () => {
       try {
-        const res = await API.get("/notifications/student");
 
-        const list = Array.isArray(res.data) ? res.data : [];
+        const res =
+          await API.get("/notifications/student");
+
+        const list = Array.isArray(res.data)
+          ? res.data
+          : res.data?.data || [];
 
         setNotifications(list);
 
-        // ✅ Count unread
-        const unread = list.filter((n) => !n.isRead).length;
+        const unread =
+          list.filter(n => !n.isRead).length;
+
         setNotifCount(unread);
+
       } catch (err) {
-        console.error("Notifications fetch failed:", err);
+        console.error(
+          "Notifications fetch failed:",
+          err
+        );
       }
     };
 
     fetchStats();
     fetchNotifications();
+
   }, []);
 
-  // -------------------- MODAL (Drive View - UI Preserved) --------------------
-  const [showDriveModal, setShowDriveModal] = useState(false);
-  const [selectedDrive, setSelectedDrive] = useState(null);
+  // ---------------- MODAL ----------------
+  const [showDriveModal, setShowDriveModal] =
+    useState(false);
+
+  const [selectedDrive, setSelectedDrive] =
+    useState(null);
 
   const openDriveModal = (drive) => {
     setSelectedDrive(drive);
     setShowDriveModal(true);
   };
 
-  // -------------------- UI STATIC DRIVES (kept same for now) --------------------
+  // ---------------- STATIC DRIVES ----------------
   const drives = [
     {
       id: 1,
@@ -117,30 +143,40 @@ export default function StudentDashboard() {
       location: "Bangalore",
       salary: "₹80,000 / month",
       eligibility: "CGPA 7.5+",
-      description: "Work with Google engineering team",
+      description:
+        "Work with Google engineering team",
     },
   ];
 
-  // ✅ Show only latest 4 notices in dashboard (from DB notifications)
-  const latestNotices = notifications.slice(0, 4);
+  const latestNotices =
+    notifications.slice(0, 4);
 
-  // -------------------- UI --------------------
+  // ---------------- UI ----------------
   return (
     <StudentLayout>
+
       <div className="dashboard-wrapper">
+
         {/* HEADER */}
         <div className="dashboard-header">
           <div>
-            <h2>Welcome, {student?.name}</h2>
+            <h2>
+              Welcome, {student?.name || "Student"}
+            </h2>
             <p>{student?.email}</p>
           </div>
-          <button className="btn small-outline" onClick={handleLogout}>
+
+          <button
+            className="btn small-outline"
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>
 
         {/* STATS */}
         <div className="stats-grid">
+
           <div className="stat-card">
             <h3>{stats.totalApplications}</h3>
             <p>Total Applications</p>
@@ -160,85 +196,107 @@ export default function StudentDashboard() {
             <h3>{completion}%</h3>
             <p>Profile Completion</p>
           </div>
+
         </div>
 
         {/* MAIN GRID */}
         <div className="main-grid">
-          {/* DRIVES */}
+
           <div className="card drives-card">
             <h4>Upcoming Job Drives</h4>
 
             {drives.map((d) => (
-              <div key={d.id} className="drive-row">
+              <div
+                key={d.id}
+                className="drive-row"
+              >
                 <div>
                   <b>{d.company}</b> — {d.role}
                 </div>
+
                 <button
                   className="btn small-blue"
-                  onClick={() => openDriveModal(d)}
+                  onClick={() =>
+                    openDriveModal(d)
+                  }
                 >
                   View
                 </button>
               </div>
             ))}
+
           </div>
 
-          {/* RIGHT */}
           <div className="right-column">
+
             <div className="card notice-card">
               <h4>Notices</h4>
 
               {latestNotices.length === 0 ? (
-                <p style={{ color: "#666" }}>No notices available</p>
+                <p style={{ color: "#666" }}>
+                  No notices available
+                </p>
               ) : (
-                latestNotices.map((n) => (
+                latestNotices.map(n => (
                   <p key={n._id}>
                     {n.title}
                   </p>
                 ))
               )}
+
             </div>
 
             <div className="card activity-card">
               <h4>Recent Activity</h4>
               <p>Profile viewed</p>
               <p>Notifications checked</p>
-              <p>Applied jobs count updated</p>
+              <p>Applied jobs updated</p>
             </div>
+
           </div>
+
         </div>
+
       </div>
 
       {/* MODAL */}
       <Modal
         show={showDriveModal}
-        onHide={() => setShowDriveModal(false)}
+        onHide={() =>
+          setShowDriveModal(false)
+        }
         centered
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {selectedDrive?.company} — {selectedDrive?.role}
+            {selectedDrive?.company}
+            {" — "}
+            {selectedDrive?.role}
           </Modal.Title>
         </Modal.Header>
+
         <Modal.Body>
-          <p>{selectedDrive?.description}</p>
           <p>
-            <b>Date:</b> {selectedDrive?.date}
+            {selectedDrive?.description}
           </p>
-          <p>
-            <b>Location:</b> {selectedDrive?.location}
-          </p>
-          <p>
-            <b>Salary:</b> {selectedDrive?.salary}
-          </p>
-          <p>
-            <b>Eligibility:</b> {selectedDrive?.eligibility}
-          </p>
+          <p><b>Date:</b> {selectedDrive?.date}</p>
+          <p><b>Location:</b> {selectedDrive?.location}</p>
+          <p><b>Salary:</b> {selectedDrive?.salary}</p>
+          <p><b>Eligibility:</b> {selectedDrive?.eligibility}</p>
         </Modal.Body>
+
         <Modal.Footer>
-          <Button onClick={() => setShowDriveModal(false)}>Close</Button>
+          <Button
+            onClick={() =>
+              setShowDriveModal(false)
+            }
+          >
+            Close
+          </Button>
         </Modal.Footer>
+
       </Modal>
+
     </StudentLayout>
   );
 }
