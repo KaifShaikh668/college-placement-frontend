@@ -65,17 +65,66 @@ export default function Profile() {
 
   /* ---------------- HANDLE INPUT ---------------- */
   const handleChange = (e) => {
-    const { name, value } = e.target;
+  const { name, value } = e.target;
 
-    if (["ssc", "hsc", "cgpa"].includes(name)) {
-      if (!/^[0-9]*$/.test(value)) return;
-    }
+  /* ✅ Aadhaar → numbers only max 12 */
+  if (name === "aadhaar") {
+    const numeric = value.replace(/\D/g, "");
+    if (numeric.length > 12) return;
 
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      aadhaar: numeric,
     }));
-  };
+    return;
+  }
+
+  /* ✅ Pincode → numbers only max 6 */
+  if (name === "pincode") {
+    const numeric = value.replace(/\D/g, "");
+    if (numeric.length > 6) return;
+
+    setForm((prev) => ({
+      ...prev,
+      pincode: numeric,
+    }));
+    return;
+  }
+
+  /* ✅ SSC & HSC → 2 digits before + 2 after decimal */
+  if (name === "ssc" || name === "hsc") {
+
+  /* allow typing like 4 → 45 → 45. → 45.8 → 45.88 */
+  if (!/^\d{0,2}(\.\d{0,2})?$/.test(value) && value !== "")
+    return;
+
+  setForm((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+  return;
+}
+
+  /* ✅ CGPA → 1 digit before + 2 after decimal */
+  if (name === "cgpa") {
+
+  /* allow 8 → 8. → 8.7 → 8.77 */
+  if (!/^\d{0,1}(\.\d{0,2})?$/.test(value) && value !== "")
+    return;
+
+  setForm((prev) => ({
+    ...prev,
+    cgpa: value,
+  }));
+  return;
+}
+
+  /* ✅ Default */
+  setForm((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
 
   /* ---------------- PROFILE PIC UPLOAD (DB) ---------------- */
   const handleProfilePic = (e) => {
@@ -110,17 +159,36 @@ export default function Profile() {
 
   /* ---------------- VALIDATION ---------------- */
   const errors = useMemo(() => {
-    return {
-      aadhaar:
-        form.aadhaar && form.aadhaar.length !== 12
-          ? "Aadhaar must be 12 digits"
-          : "",
-      pincode:
-        form.pincode && form.pincode.length !== 6
-          ? "Pincode must be 6 digits"
-          : "",
-    };
-  }, [form.aadhaar, form.pincode]);
+  return {
+    aadhaar:
+      form.aadhaar && form.aadhaar.length !== 12
+        ? "Aadhaar must be 12 digits"
+        : "",
+
+    pincode:
+      form.pincode && form.pincode.length !== 6
+        ? "Pincode must be 6 digits"
+        : "",
+
+    ssc:
+      form.ssc &&
+      !/^\d{1,2}(\.\d{1,2})?$/.test(form.ssc)
+        ? "Invalid SSC format"
+        : "",
+
+    hsc:
+      form.hsc &&
+      !/^\d{1,2}(\.\d{1,2})?$/.test(form.hsc)
+        ? "Invalid HSC format"
+        : "",
+
+    cgpa:
+      form.cgpa &&
+      !/^\d(\.\d{1,2})?$/.test(form.cgpa)
+        ? "Invalid CGPA format"
+        : "",
+  };
+}, [form]);
 
   /* ---------------- PROFILE COMPLETION ---------------- */
   const completion = useMemo(() => {
@@ -199,12 +267,25 @@ export default function Profile() {
   ];
 
   const graduationCourses = [
-    "Bachelor of Arts (B.A)",
-    "Bachelor of Commerce (B.Com)",
-    "Bachelor of Science (B.Sc.)",
-    "Bachelor of Management Studies (B.M.S.)",
-    "B.Sc (Information Technology)",
-  ];
+"Bachelor of Arts (B.A)",
+"Bachelor of Arts (B.A) in Psychology",
+"Bachelor of Arts (B.A) in Political Science",
+"Bachelor of Arts (B.A) in History",
+"Bachelor of Arts (B.A) in Hindi",
+"Bachelor of Arts (B.A) in Economics",
+"Bachelor of Arts in Multimedia and Mass Communication (B.A.M.M.C.)",
+"Bachelor of Commerce (B.Com)",
+"Bachelor of Management Studies (B.M.S.)",
+"Bachelor of Commerce (B.Com.)",
+"B.Com (Accounting and Finance)",
+"B.Com (Banking and Insurance)",
+"B.Com. (Financial Management)",
+"Bachelor of Science (B.Sc.)",
+"Bachelor of Science (Mathematics)",
+"Bachelor of Science(B.Sc.)(Physics)",
+"Bachelor of Science (B.Sc.) (Chemistry)",
+"B.Sc (Information Technology)"
+];
 
   if (loading) {
     return (
@@ -413,7 +494,7 @@ export default function Profile() {
               </div>
 
               <div className="portal-field">
-                <label>CGPA / Percentage</label>
+                <label>CGPA Of Last Semester</label>
                 <input
                   name="cgpa"
                   maxLength="3"

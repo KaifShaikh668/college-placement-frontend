@@ -6,297 +6,355 @@ import API from "../../utils/api";
 import "../../styles/Dashboard.css";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import { FaBell } from "react-icons/fa";
 
 // -------------------- COMPONENT --------------------
 export default function StudentDashboard() {
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  // ✅ SAFE STUDENT FETCH
-  const student = useMemo(() => {
-    try {
-      const data = localStorage.getItem("student");
-      return data ? JSON.parse(data) : null;
-    } catch {
-      return null;
-    }
-  }, []);
+// ---------------- SAFE STUDENT ----------------
+const student = useMemo(()=>{
+  try{
+    const data = localStorage.getItem("student");
+    return data ? JSON.parse(data) : null;
+  }catch{
+    return null;
+  }
+},[]);
 
-  useEffect(() => {
-    if (!student) {
-      navigate("/login/student");
-    }
-  }, [student, navigate]);
-
-  // -------------------- LOGOUT --------------------
-  const handleLogout = () => {
-    localStorage.removeItem("student");
-    localStorage.removeItem("studentToken");
+useEffect(()=>{
+  if(!student){
     navigate("/login/student");
-  };
+  }
+},[student,navigate]);
 
-  // ---------------- PROFILE COMPLETION ----------------
-  const [completion, setCompletion] = useState(
-    Number(localStorage.getItem("profileCompletion")) || 0
-  );
+// ---------------- LOGOUT ----------------
+const handleLogout=()=>{
+  localStorage.removeItem("student");
+  localStorage.removeItem("studentToken");
+  navigate("/login/student");
+};
 
-  useEffect(() => {
-    const updateCompletion = () => {
-      setCompletion(
-        Number(localStorage.getItem("profileCompletion")) || 0
-      );
-    };
+// ---------------- PROFILE COMPLETION ----------------
+const [completion,setCompletion]=useState(
+Number(localStorage.getItem("profileCompletion"))||0
+);
 
-    window.addEventListener("storage", updateCompletion);
-    updateCompletion();
+useEffect(()=>{
+const updateCompletion=()=>{
+setCompletion(
+Number(localStorage.getItem("profileCompletion"))||0
+);
+};
 
-    return () =>
-      window.removeEventListener("storage", updateCompletion);
-  }, []);
+window.addEventListener("storage",updateCompletion);
+updateCompletion();
 
-  // -------------------- STATS --------------------
-  const [stats, setStats] = useState({
-    totalApplications: 0,
-    applied: 0,
-    shortlisted: 0,
-    selected: 0,
-    rejected: 0,
-  });
+return()=>window.removeEventListener("storage",updateCompletion);
 
-  // -------------------- NOTIFICATIONS ----------------
-  const [notifications, setNotifications] = useState([]);
-  const [notifCount, setNotifCount] = useState(0);
+},[]);
 
-  useEffect(() => {
+// -------------------- STATS --------------------
+const [stats,setStats]=useState({
+totalApplications:0,
+applied:0,
+shortlisted:0,
+selected:0,
+rejected:0
+});
 
-    const fetchStats = async () => {
-      try {
-        const res = await API.get("/student/stats");
+// -------------------- NOTIFICATIONS ----------------
+const [notifications,setNotifications]=useState([]);
+const [notifCount,setNotifCount]=useState(0);
+const [showNotif,setShowNotif]=useState(false);
 
-        const data =
-          res.data?.data || res.data || {};
+// -------------------- JOB DRIVES ----------------
+const [drives,setDrives]=useState([]);
 
-        setStats({
-          totalApplications:
-            data.totalApplications ?? 0,
-          applied: data.applied ?? 0,
-          shortlisted: data.shortlisted ?? 0,
-          selected: data.selected ?? 0,
-          rejected: data.rejected ?? 0,
-        });
+// ---------------- FETCH DASHBOARD ----------------
+const fetchDashboard=async()=>{
 
-      } catch (err) {
-        console.error("Stats fetch failed:", err);
-      }
-    };
+try{
 
-    const fetchNotifications = async () => {
-      try {
+// ✅ STATS
+const statsRes=await API.get("/student/stats");
+const s=statsRes.data?.data||statsRes.data||{};
 
-        const res =
-          await API.get("/notifications/student");
+setStats({
+totalApplications:s.totalApplications??0,
+applied:s.applied??0,
+shortlisted:s.shortlisted??0,
+selected:s.selected??0,
+rejected:s.rejected??0
+});
 
-        const list = Array.isArray(res.data)
-          ? res.data
-          : res.data?.data || [];
+// ✅ NOTIFICATIONS
+const notifRes=
+await API.get("/notifications/student");
 
-        setNotifications(list);
+const list=Array.isArray(notifRes.data)
+?notifRes.data
+:notifRes.data?.data||[];
 
-        const unread =
-          list.filter(n => !n.isRead).length;
+setNotifications(list);
+setNotifCount(
+list.filter(n=>!n.isRead).length
+);
 
-        setNotifCount(unread);
+// ✅ JOB DRIVES LIVE
+const driveRes=
+await API.get("/jobs/student");
 
-      } catch (err) {
-        console.error(
-          "Notifications fetch failed:",
-          err
-        );
-      }
-    };
+setDrives(
+driveRes.data?.data||
+driveRes.data||
+[]
+);
 
-    fetchStats();
-    fetchNotifications();
+}catch(err){
+console.error("Dashboard load error",err);
+}
+};
 
-  }, []);
+// ---------------- AUTO REFRESH ----------------
+useEffect(()=>{
 
-  // ---------------- MODAL ----------------
-  const [showDriveModal, setShowDriveModal] =
-    useState(false);
+fetchDashboard();
 
-  const [selectedDrive, setSelectedDrive] =
-    useState(null);
+// ✅ every 10 sec refresh
+const interval=setInterval(()=>{
+fetchDashboard();
+},10000);
 
-  const openDriveModal = (drive) => {
-    setSelectedDrive(drive);
-    setShowDriveModal(true);
-  };
+return()=>clearInterval(interval);
 
-  // ---------------- STATIC DRIVES ----------------
-  const drives = [
-    {
-      id: 1,
-      company: "Google",
-      role: "SDE Intern",
-      date: "12 Dec 2025",
-      status: "Open",
-      location: "Bangalore",
-      salary: "₹80,000 / month",
-      eligibility: "CGPA 7.5+",
-      description:
-        "Work with Google engineering team",
-    },
-  ];
+},[]);
 
-  const latestNotices =
-    notifications.slice(0, 4);
+// ---------------- APPLY JOB ----------------
+const applyJob=async(jobId)=>{
 
-  // ---------------- UI ----------------
-  return (
-    <StudentLayout>
+try{
 
-      <div className="dashboard-wrapper">
+await API.post("/applications/apply",{
+jobId
+});
 
-        {/* HEADER */}
-        <div className="dashboard-header">
-          <div>
-            <h2>
-              Welcome, {student?.name || "Student"}
-            </h2>
-            <p>{student?.email}</p>
-          </div>
+alert("✅ Applied Successfully");
 
-          <button
-            className="btn small-outline"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
+fetchDashboard();
 
-        {/* STATS */}
-        <div className="stats-grid">
+}catch(err){
+alert(
+err.response?.data?.message||
+"Application failed"
+);
+}
+};
 
-          <div className="stat-card">
-            <h3>{stats.totalApplications}</h3>
-            <p>Total Applications</p>
-          </div>
+// ---------------- MODAL ----------------
+const [showDriveModal,setShowDriveModal]=
+useState(false);
 
-          <div className="stat-card">
-            <h3>{stats.applied}</h3>
-            <p>Applied</p>
-          </div>
+const [selectedDrive,setSelectedDrive]=
+useState(null);
 
-          <div className="stat-card">
-            <h3>{notifCount}</h3>
-            <p>Notifications</p>
-          </div>
+const openDriveModal=(drive)=>{
+setSelectedDrive(drive);
+setShowDriveModal(true);
+};
 
-          <div className="stat-card">
-            <h3>{completion}%</h3>
-            <p>Profile Completion</p>
-          </div>
+const latestNotices=
+notifications.slice(0,4);
 
-        </div>
+// ---------------- UI ----------------
+return(
 
-        {/* MAIN GRID */}
-        <div className="main-grid">
+<StudentLayout>
 
-          <div className="card drives-card">
-            <h4>Upcoming Job Drives</h4>
+<div className="dashboard-wrapper">
 
-            {drives.map((d) => (
-              <div
-                key={d.id}
-                className="drive-row"
-              >
-                <div>
-                  <b>{d.company}</b> — {d.role}
-                </div>
+{/* HEADER */}
+<div className="dashboard-header">
 
-                <button
-                  className="btn small-blue"
-                  onClick={() =>
-                    openDriveModal(d)
-                  }
-                >
-                  View
-                </button>
-              </div>
-            ))}
+<div>
+<h2>
+Welcome, {student?.name||"Student"}
+</h2>
+<p>{student?.email}</p>
+</div>
 
-          </div>
+<div style={{display:"flex",gap:"15px"}}>
 
-          <div className="right-column">
+{/* ✅ NOTIFICATION BELL */}
+<div
+className="notification-bell"
+onClick={()=>setShowNotif(!showNotif)}
+style={{cursor:"pointer",position:"relative"}}
+>
 
-            <div className="card notice-card">
-              <h4>Notices</h4>
+<FaBell size={20}/>
 
-              {latestNotices.length === 0 ? (
-                <p style={{ color: "#666" }}>
-                  No notices available
-                </p>
-              ) : (
-                latestNotices.map(n => (
-                  <p key={n._id}>
-                    {n.title}
-                  </p>
-                ))
-              )}
+{notifCount>0&&(
+<span className="notif-badge">
+{notifCount}
+</span>
+)}
 
-            </div>
+</div>
 
-            <div className="card activity-card">
-              <h4>Recent Activity</h4>
-              <p>Profile viewed</p>
-              <p>Notifications checked</p>
-              <p>Applied jobs updated</p>
-            </div>
+</div>
 
-          </div>
+</div>
 
-        </div>
+{/* NOTIFICATION DROPDOWN */}
+{showNotif&&(
+<div className="notif-dropdown">
 
-      </div>
+{notifications.length===0?
+<p>No Notifications</p>
+:
+notifications.map(n=>(
+<p key={n._id}>{n.title}</p>
+))
+}
 
-      {/* MODAL */}
-      <Modal
-        show={showDriveModal}
-        onHide={() =>
-          setShowDriveModal(false)
-        }
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {selectedDrive?.company}
-            {" — "}
-            {selectedDrive?.role}
-          </Modal.Title>
-        </Modal.Header>
+</div>
+)}
 
-        <Modal.Body>
-          <p>
-            {selectedDrive?.description}
-          </p>
-          <p><b>Date:</b> {selectedDrive?.date}</p>
-          <p><b>Location:</b> {selectedDrive?.location}</p>
-          <p><b>Salary:</b> {selectedDrive?.salary}</p>
-          <p><b>Eligibility:</b> {selectedDrive?.eligibility}</p>
-        </Modal.Body>
+{/* STATS */}
+<div className="stats-grid">
 
-        <Modal.Footer>
-          <Button
-            onClick={() =>
-              setShowDriveModal(false)
-            }
-          >
-            Close
-          </Button>
-        </Modal.Footer>
+<div className="stat-card">
+<h3>{stats.totalApplications}</h3>
+<p>Total Applications</p>
+</div>
 
-      </Modal>
+<div className="stat-card">
+<h3>{stats.applied}</h3>
+<p>Applied</p>
+</div>
 
-    </StudentLayout>
-  );
+<div className="stat-card">
+<h3>{notifCount}</h3>
+<p>Notifications</p>
+</div>
+
+<div className="stat-card">
+<h3>{completion}%</h3>
+<p>Profile Completion</p>
+</div>
+
+</div>
+
+{/* MAIN GRID */}
+<div className="main-grid">
+
+{/* JOB DRIVES */}
+<div className="card drives-card">
+<h4>Upcoming Job Drives</h4>
+
+{drives.length===0?(
+<p>No drives available</p>
+):
+drives.map(d=>(
+<div
+key={d._id}
+className="drive-row"
+>
+
+<div>
+<b>{d.company}</b> — {d.role}
+</div>
+
+<div style={{display:"flex",gap:"10px"}}>
+
+<button
+className="btn small-blue"
+onClick={()=>openDriveModal(d)}
+>
+View
+</button>
+
+<button
+className="btn small-green"
+onClick={()=>applyJob(d._id)}
+>
+Apply
+</button>
+
+</div>
+
+</div>
+))
+}
+
+</div>
+
+{/* RIGHT SIDE */}
+<div className="right-column">
+
+<div className="card notice-card">
+<h4>Notices</h4>
+
+{latestNotices.length===0?
+<p style={{color:"#666"}}>
+No notices available
+</p>
+:
+latestNotices.map(n=>(
+<p key={n._id}>{n.title}</p>
+))
+}
+
+</div>
+
+<div className="card activity-card">
+<h4>Recent Activity</h4>
+<p>Profile viewed</p>
+<p>{stats.applied} jobs applied</p>
+<p>Notifications checked</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{/* MODAL */}
+<Modal
+show={showDriveModal}
+onHide={()=>setShowDriveModal(false)}
+centered
+>
+
+<Modal.Header closeButton>
+<Modal.Title>
+{selectedDrive?.company}
+{" — "}
+{selectedDrive?.role}
+</Modal.Title>
+</Modal.Header>
+
+<Modal.Body>
+<p>{selectedDrive?.description}</p>
+<p><b>Date:</b> {selectedDrive?.date}</p>
+<p><b>Location:</b> {selectedDrive?.location}</p>
+<p><b>Salary:</b> {selectedDrive?.salary}</p>
+<p><b>Eligibility:</b> {selectedDrive?.eligibility}</p>
+</Modal.Body>
+
+<Modal.Footer>
+<Button
+onClick={()=>setShowDriveModal(false)}
+>
+Close
+</Button>
+</Modal.Footer>
+
+</Modal>
+
+</StudentLayout>
+);
 }

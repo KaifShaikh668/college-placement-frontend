@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import API from "../../utils/api"; // ✅ USE PRODUCTION API INSTANCE
 import "../../styles/ManageStudents.css";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 /* 🔐 MOCK ROLE (later comes from backend / auth) */
 const currentUserRole = "ADMIN"; // change to "VIEWER" to test permissions

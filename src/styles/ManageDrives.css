@@ -5,7 +5,8 @@
   color: #1f2b46;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
+
 .md-header {
   display: flex;
   justify-content: space-between;
@@ -26,7 +27,8 @@
   color: #6b7696;
 }
 
-/* ADD BUTTON */
+/* ================= ADD BUTTON ================= */
+
 .add-btn {
   padding: 10px 14px;
   border-radius: 10px;
@@ -43,7 +45,8 @@
   box-shadow: 0 10px 22px rgba(59, 75, 221, 0.25);
 }
 
-/* CARD + TABLE */
+/* ================= CARD ================= */
+
 .card {
   background: white;
   border-radius: 14px;
@@ -52,15 +55,17 @@
   overflow: hidden;
 }
 
+/* ================= TABLE ================= */
+
 .drives-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  table-layout: fixed;
 }
 
 .drives-table thead th {
-  text-align: left;
-  padding: 12px 12px;
+  padding: 12px;
   background: #f2f4ff;
   font-weight: 800;
   color: #2a3664;
@@ -68,16 +73,22 @@
 }
 
 .drives-table tbody td {
-  padding: 12px 12px;
+  padding: 12px;
   border-bottom: 1px solid #f0f2ff;
   color: #3a4668;
+  vertical-align: middle;
+}
+
+.drives-table tbody tr {
+  height: 60px;
 }
 
 .drives-table tbody tr:hover {
   background: #fbfbff;
 }
 
-/* EDIT ROW */
+/* ================= EDIT ROW ================= */
+
 .edit-row td {
   background: #fdfdff;
 }
@@ -97,7 +108,8 @@
   box-shadow: 0 0 0 4px rgba(74, 96, 255, 0.12);
 }
 
-/* BADGES */
+/* ================= STATUS BADGES ================= */
+
 .badge {
   display: inline-block;
   padding: 6px 10px;
@@ -116,11 +128,26 @@
   color: #d0342c;
 }
 
-/* ACTIONS */
-.actions {
-  text-align: right;
-  white-space: nowrap;
+/* ==================================================
+   ✅ PERFECT CENTERED ACTION COLUMN (FINAL FIX)
+================================================== */
+
+.drives-table th:last-child,
+.drives-table td:last-child {
+  width: 220px;
+  text-align: center;
+  vertical-align: middle;
 }
+
+/* center buttons perfectly */
+.drives-table td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ================= BUTTONS ================= */
 
 .btn-edit,
 .btn-delete,
@@ -138,7 +165,6 @@
 .btn-edit {
   background: #eef1ff;
   color: #2b3aa8;
-  margin-right: 8px;
 }
 
 .btn-edit:hover {
@@ -159,7 +185,6 @@
 .btn-save {
   background: #3b4bdd;
   color: #fff;
-  margin-right: 8px;
 }
 
 .btn-save:hover {
@@ -177,7 +202,8 @@
   box-shadow: 0 10px 20px rgba(120, 130, 180, 0.12);
 }
 
-/* RESPONSIVE */
+/* ================= RESPONSIVE ================= */
+
 @media (max-width: 900px) {
   .md-header {
     flex-direction: column;

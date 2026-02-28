@@ -30,8 +30,16 @@ const [showToast,setShowToast]=useState(false);
 
 /* ---------- VALIDATION ---------- */
 
+/* ✅ FIXED STRICT EMAIL VALIDATION */
 const emailValid = useMemo(()=>{
-return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(regEmail.trim());
+const email = regEmail.trim();
+
+/* ✅ STRICT GMAIL VALIDATION */
+const gmailRegex =
+/^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+return gmailRegex.test(email);
+
 },[regEmail]);
 
 const studentIdValid = useMemo(()=>{
@@ -242,7 +250,7 @@ value={regEmail}
 onChange={(e)=>setRegEmail(e.target.value)}
 />
 
-{regEmail &&
+{regEmail.length>0 &&
 (emailValid?
 <FaCheckCircle className="status-icon valid"/>:
 <FaTimesCircle className="status-icon invalid"/>)

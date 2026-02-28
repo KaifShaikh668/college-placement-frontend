@@ -16,7 +16,7 @@ export default function ManageDrives() {
   const token = localStorage.getItem("adminToken");
 
   /* =========================
-     FETCH DRIVES (PRODUCTION FIXED)
+     FETCH DRIVES
   ========================= */
   const fetchDrives = useCallback(async () => {
     if (!token) return;
@@ -138,7 +138,7 @@ export default function ManageDrives() {
               <th>Role</th>
               <th>Date</th>
               <th>Status</th>
-              <th className="actions">Actions</th>
+              <th className="actions actions-col">Actions</th>
             </tr>
           </thead>
 
@@ -185,13 +185,16 @@ export default function ManageDrives() {
                   </select>
                 </td>
 
-                <td className="actions">
-                  <button className="btn-save" onClick={saveDrive}>
-                    Save
-                  </button>
-                  <button className="btn-cancel" onClick={cancelEdit}>
-                    Cancel
-                  </button>
+                {/* ✅ FIXED ALIGNMENT */}
+                <td className="actions actions-col">
+                  <div className="action-buttons">
+                    <button className="btn-save" onClick={saveDrive}>
+                      Save
+                    </button>
+                    <button className="btn-cancel" onClick={cancelEdit}>
+                      Cancel
+                    </button>
+                  </div>
                 </td>
               </tr>
             )}
@@ -201,24 +204,30 @@ export default function ManageDrives() {
                 <td>{d.company}</td>
                 <td>{d.role}</td>
                 <td>{d.driveDate ? d.driveDate.slice(0, 10) : ""}</td>
+
                 <td>
                   <span className={`badge ${d.status.toLowerCase()}`}>
                     {d.status}
                   </span>
                 </td>
+
+                {/* ✅ FIXED ALIGNMENT */}
                 <td className="actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => startEdit(d)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => deleteDrive(d._id)}
-                  >
-                    Delete
-                  </button>
+                  <div className="action-buttons">
+                    <button
+                      className="btn-edit"
+                      onClick={() => startEdit(d)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="btn-delete"
+                      onClick={() => deleteDrive(d._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
