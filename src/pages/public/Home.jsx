@@ -78,13 +78,13 @@ const Home = () => {
 
               <div className="dropdown-menu">
                 <button onClick={() => setActivePage("dept-science")}>
-                  Faculty Of Science
+                  Department Of Science
                 </button>
                 <button onClick={() => setActivePage("dept-arts")}>
-                  Faculty Of Arts
+                  Department Of Arts
                 </button>
                 <button onClick={() => setActivePage("dept-commerce")}>
-                  Faculty Of Commerce
+                  Department Of Commerce
                 </button>
               </div>
             </li>
