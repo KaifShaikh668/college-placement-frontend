@@ -12,7 +12,7 @@ export default function ManageNotices() {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ title: "", message: "" });
 
-  // ✅ Fetch notices from backend (admin view)
+  //Fetch notices from backend (admin view)
   const fetchNotices = async () => {
     try {
       const res = await API.get("/notifications/admin");
@@ -65,13 +65,13 @@ export default function ManageNotices() {
     setForm({ title: "", message: "" });
   }
 
-  // ✅ Save Notice = Create or Update (Backend)
+  //Save Notice = Create or Update (Backend)
   const saveNotice = async () => {
     if (!form.title.trim() || !form.message.trim()) return;
 
     try {
       if (editingId === "new") {
-        // ✅ CREATE -> send to students
+        //CREATE -> send to students
         await API.post("/notifications/admin", {
           title: form.title,
           message: form.message,
@@ -79,7 +79,7 @@ export default function ManageNotices() {
           targetYear: "All",
         });
       } else {
-        // ✅ UPDATE
+        //UPDATE
         await API.put(`/notifications/admin/${editingId}`, {
           title: form.title,
           message: form.message,
@@ -95,7 +95,7 @@ export default function ManageNotices() {
     }
   };
 
-  // ✅ Delete notice from backend
+  //Delete notice from backend
   const deleteNotice = async (id) => {
     if (!window.confirm("Delete this notice?")) return;
 
@@ -103,7 +103,7 @@ export default function ManageNotices() {
       await API.delete(`/notifications/admin/${id}`);
       await fetchNotices();
 
-      // ✅ if page becomes empty, go back
+      //if page becomes empty, go back
       setPage((prev) => (prev > 1 && currentNotices.length === 1 ? prev - 1 : prev));
     } catch (error) {
       console.error("Delete notice failed:", error);
@@ -141,7 +141,7 @@ export default function ManageNotices() {
             </thead>
 
             <tbody>
-              {/* ✅ Add/Edit Row */}
+              {/*Add/Edit Row */}
               {editingId && (
                 <tr className="edit-row">
                   <td>
@@ -174,7 +174,7 @@ export default function ManageNotices() {
                 </tr>
               )}
 
-              {/* ✅ Notices */}
+              {/*Notices */}
               {currentNotices.map((n) => (
                 <tr key={n._id}>
                   <td>{n.title}</td>
@@ -196,7 +196,7 @@ export default function ManageNotices() {
                 </tr>
               ))}
 
-              {/* ✅ Empty */}
+              {/*Empty */}
               {currentNotices.length === 0 && (
                 <tr>
                   <td colSpan="4" className="empty">

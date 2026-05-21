@@ -116,7 +116,7 @@
   transform: scale(0.98);
 }
 
-/* ✅ keyboard focus (good UX) */
+/* keyboard focus (good UX) */
 .view-btn:focus-visible {
   outline: 3px solid rgba(75, 95, 255, 0.35);
   outline-offset: 2px;
@@ -209,7 +209,7 @@
   }
 }
 
-/* ✅ Responsive */
+/* Responsive */
 @media (max-width: 600px) {
   .notifications-wrapper {
     padding: 14px;

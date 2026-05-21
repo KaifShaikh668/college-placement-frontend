@@ -51,7 +51,7 @@ export default function AdminSidebar() {
           <FaBriefcase className="icon" /> Manage Drives
         </NavLink>
 
-        {/* ✅ Manage Applications */}
+        {/*Manage Applications */}
         <NavLink
           to="/admin/manage-applications"
           className={({ isActive }) =>

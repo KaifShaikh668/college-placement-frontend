@@ -77,7 +77,7 @@ const fetchDashboard=async()=>{
 
 try{
 
-// ✅ STATS
+// STATS
 const statsRes=await API.get("/student/stats");
 const s=statsRes.data?.data||statsRes.data||{};
 
@@ -89,7 +89,7 @@ selected:s.selected??0,
 rejected:s.rejected??0
 });
 
-// ✅ NOTIFICATIONS
+// NOTIFICATIONS
 const notifRes=
 await API.get("/notifications/student");
 
@@ -102,7 +102,7 @@ setNotifCount(
 list.filter(n=>!n.isRead).length
 );
 
-// ✅ JOB DRIVES LIVE
+// JOB DRIVES LIVE
 const driveRes=
 await API.get("/jobs/student");
 
@@ -122,7 +122,7 @@ useEffect(()=>{
 
 fetchDashboard();
 
-// ✅ every 10 sec refresh
+// every 10 sec refresh
 const interval=setInterval(()=>{
 fetchDashboard();
 },10000);
@@ -140,7 +140,7 @@ await API.post("/applications/apply",{
 jobId
 });
 
-alert("✅ Applied Successfully");
+alert("Applied Successfully");
 
 fetchDashboard();
 
@@ -186,7 +186,7 @@ Welcome, {student?.name||"Student"}
 
 <div style={{display:"flex",gap:"15px"}}>
 
-{/* ✅ NOTIFICATION BELL */}
+{/* NOTIFICATION BELL */}
 <div
 className="notification-bell"
 onClick={()=>setShowNotif(!showNotif)}

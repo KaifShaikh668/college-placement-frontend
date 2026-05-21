@@ -67,7 +67,7 @@ export default function Profile() {
   const handleChange = (e) => {
   const { name, value } = e.target;
 
-  /* ✅ Aadhaar → numbers only max 12 */
+  /* Aadhaar → numbers only max 12 */
   if (name === "aadhaar") {
     const numeric = value.replace(/\D/g, "");
     if (numeric.length > 12) return;
@@ -79,7 +79,7 @@ export default function Profile() {
     return;
   }
 
-  /* ✅ Pincode → numbers only max 6 */
+  /* Pincode → numbers only max 6 */
   if (name === "pincode") {
     const numeric = value.replace(/\D/g, "");
     if (numeric.length > 6) return;
@@ -91,7 +91,7 @@ export default function Profile() {
     return;
   }
 
-  /* ✅ SSC & HSC → 2 digits before + 2 after decimal */
+  /* SSC & HSC → 2 digits before + 2 after decimal */
   if (name === "ssc" || name === "hsc") {
 
   /* allow typing like 4 → 45 → 45. → 45.8 → 45.88 */
@@ -105,7 +105,7 @@ export default function Profile() {
   return;
 }
 
-  /* ✅ CGPA → 1 digit before + 2 after decimal */
+  /* CGPA → 1 digit before + 2 after decimal */
   if (name === "cgpa") {
 
   /* allow 8 → 8. → 8.7 → 8.77 */
@@ -119,7 +119,7 @@ export default function Profile() {
   return;
 }
 
-  /* ✅ Default */
+  /* Default */
   setForm((prev) => ({
     ...prev,
     [name]: value,
@@ -245,11 +245,11 @@ export default function Profile() {
 
       localStorage.setItem("profileCompletion", completion);
 
-      alert("✅ Profile updated successfully!");
+      alert("Profile updated successfully!");
       fetchStudentProfile();
     } catch (err) {
       console.error("Profile update failed:", err);
-      alert("❌ Failed to save profile");
+      alert("Failed to save profile");
     } finally {
       setSaving(false);
     }
@@ -300,7 +300,7 @@ export default function Profile() {
   return (
     <StudentLayout>
       <div className="profile-wrapper">
-        {/* ✅ PORTAL HEADER CARD */}
+        {/* PORTAL HEADER CARD */}
         <div className="portal-top-card">
           <div className="portal-left">
             <label className="portal-avatar">
@@ -347,7 +347,7 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* ✅ PORTAL TABS */}
+        {/* PORTAL TABS */}
         <div className="portal-tabs">
           <button
             className={activeTab === "personal" ? "ptab active" : "ptab"}
@@ -369,7 +369,7 @@ export default function Profile() {
           </button>
         </div>
 
-        {/* ✅ PERSONAL DETAILS */}
+        {/* PERSONAL DETAILS */}
         {activeTab === "personal" && (
           <div className="portal-card">
             <h3 className="portal-title">Personal Details</h3>
@@ -409,7 +409,7 @@ export default function Profile() {
           </div>
         )}
 
-        {/* ✅ ADDRESS DETAILS */}
+        {/* ADDRESS DETAILS */}
         {activeTab === "address" && (
           <div className="portal-card">
             <h3 className="portal-title">Address Details</h3>
@@ -453,7 +453,7 @@ export default function Profile() {
           </div>
         )}
 
-        {/* ✅ ACADEMIC DETAILS */}
+        {/* ACADEMIC DETAILS */}
         {activeTab === "academics" && (
           <div className="portal-card">
             <h3 className="portal-title">Academic Details</h3>

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// PUBLIC PAGES ✅
+// PUBLIC PAGES
 import Home from "./pages/public/Home";
 import About from "./pages/public/About";
 import Departments from "./pages/public/Departments";
@@ -9,7 +9,7 @@ import Departments from "./pages/public/Departments";
 import StudentLogin from "./pages/auth/StudentLogin";
 import StudentRegister from "./pages/auth/StudentRegister";
 import AdminLogin from "./pages/auth/AdminLogin";
-import ForgotPassword from "./pages/auth/ForgotPassword"; // ✅ ADDED
+import ForgotPassword from "./pages/auth/ForgotPassword"; 
 
 // STUDENT PAGES
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -42,7 +42,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ================= PUBLIC ROUTES ✅ ================= */}
+        {/* ================= PUBLIC ROUTES ================= */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/departments" element={<Departments />} />
@@ -51,7 +51,7 @@ function App() {
         <Route path="/login/student" element={<StudentLogin />} />
         <Route path="/register/student" element={<StudentRegister />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} /> {/* ✅ ADDED */}
+        <Route path="/forgot-password" element={<ForgotPassword />} /> 
 
         {/* ================= STUDENT ROUTES ================= */}
         <Route

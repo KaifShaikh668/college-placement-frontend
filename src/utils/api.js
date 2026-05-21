@@ -13,12 +13,12 @@ API.interceptors.request.use((req) => {
     req.headers = {};
   }
 
-  // ✅ If admin logged in → always send admin token
+  // If admin logged in → always send admin token
   if (adminToken) {
     req.headers.Authorization = `Bearer ${adminToken}`;
   }
 
-  // ✅ Otherwise send student token
+  // Otherwise send student token
   else if (studentToken) {
     req.headers.Authorization = `Bearer ${studentToken}`;
   }

@@ -45,14 +45,14 @@ email:email.trim(),
 password:pass.trim()
 });
 
-/* ✅ SAVE ADMIN SESSION */
+/* SAVE ADMIN SESSION */
 localStorage.setItem("adminToken",res.data.token);
 localStorage.setItem(
 "admin",
 JSON.stringify(res.data.user)
 );
 
-/* ✅ REDIRECT */
+/* REDIRECT */
 navigate("/admin/dashboard");
 
 }catch(error){

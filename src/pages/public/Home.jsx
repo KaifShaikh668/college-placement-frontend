@@ -11,7 +11,7 @@ const Home = () => {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // ✅ when opening departments via dropdown, scroll to the selected faculty
+  // when opening departments via dropdown, scroll to the selected faculty
   useEffect(() => {
     if (activePage.startsWith("dept-")) {
       const id = activePage.replace("dept-", "");
@@ -65,7 +65,7 @@ const Home = () => {
               </button>
             </li>
 
-            {/* ✅ Departments Dropdown */}
+            {/* Departments Dropdown */}
             <li className="dropdown">
               <button
                 className={`nav-btn dropdown-toggle ${
@@ -89,7 +89,7 @@ const Home = () => {
               </div>
             </li>
 
-            {/* ✅ PLACED STUDENTS PAGE */}
+            {/* PLACED STUDENTS PAGE */}
             <li>
               <button
                 className={`nav-btn ${activePage === "placed" ? "active" : ""}`}
@@ -102,7 +102,7 @@ const Home = () => {
         </div>
       </nav>
 
-      {/* ✅ ================= HOME VIEW ================= */}
+      {/* ================= HOME VIEW ================= */}
       {activePage === "home" && (
         <>
           <div
@@ -140,7 +140,7 @@ const Home = () => {
         </>
       )}
 
-      {/* ✅ ================= ABOUT VIEW ================= */}
+      {/* ================= ABOUT VIEW ================= */}
       {activePage === "about" && (
         <>
           <section className="about-fullpage">
@@ -177,7 +177,7 @@ const Home = () => {
                 </div>
 
                 <div className="about-info-card">
-                  <h3>✅ Benefits</h3>
+                  <h3>Benefits</h3>
                   <p>
                     Students can explore job drives, apply online, receive
                     notices, and track their applications easily through the
@@ -189,7 +189,7 @@ const Home = () => {
               {/* OBJECTIVES + ACTIVITIES */}
               <div className="about-grid-2">
                 <div className="about-panel">
-                  <h2>📌 Objectives</h2>
+                  <h2>Objectives</h2>
                   <ul>
                     <li>
                       Provide maximum placement opportunities to eligible
@@ -263,7 +263,7 @@ const Home = () => {
         </>
       )}
 
-      {/* ✅ ================= DEPARTMENTS VIEW ================= */}
+      {/* ================= DEPARTMENTS VIEW ================= */}
       {activePage === "departments" && (
         <>
           <section className="dept-fullpage">
@@ -324,7 +324,7 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* ✅ SCIENCE DETAILS */}
+              {/* SCIENCE DETAILS */}
               <div className="faculty-section" id="science">
                 <h2>🔬 Department of Science</h2>
                 <p className="faculty-desc">
@@ -367,7 +367,7 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* ✅ ARTS DETAILS */}
+              {/* ARTS DETAILS */}
               <div className="faculty-section" id="arts">
                 <h2>🎨 Department of Arts</h2>
                 <p className="faculty-desc">
@@ -410,7 +410,7 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* ✅ COMMERCE DETAILS */}
+              {/* COMMERCE DETAILS */}
               <div className="faculty-section" id="commerce">
                 <h2>📊 Department of Commerce</h2>
                 <p className="faculty-desc">
@@ -452,9 +452,9 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* ✅ FINAL MESSAGE */}
+              {/* FINAL MESSAGE */}
               <div className="dept-footer-note">
-                <h2>✅ Department Support for Placements</h2>
+                <h2>Department Support for Placements</h2>
                 <p>
                   Each faculty department supports students by providing
                   training, workshops, internships and placement preparation
@@ -472,7 +472,7 @@ const Home = () => {
         </>
       )}
 
-      {/* ✅ ================= PLACED STUDENTS VIEW ================= */}
+      {/* ================= PLACED STUDENTS VIEW ================= */}
       {activePage === "placed" && (
         <>
           <section className="placed-fullpage">

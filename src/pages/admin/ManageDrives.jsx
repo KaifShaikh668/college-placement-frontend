@@ -185,7 +185,7 @@ export default function ManageDrives() {
                   </select>
                 </td>
 
-                {/* ✅ FIXED ALIGNMENT */}
+                {/*ALIGNMENT */}
                 <td className="actions actions-col">
                   <div className="action-buttons">
                     <button className="btn-save" onClick={saveDrive}>
@@ -211,7 +211,7 @@ export default function ManageDrives() {
                   </span>
                 </td>
 
-                {/* ✅ FIXED ALIGNMENT */}
+                {/*ALIGNMENT */}
                 <td className="actions">
                   <div className="action-buttons">
                     <button

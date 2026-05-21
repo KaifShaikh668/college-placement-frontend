@@ -21,7 +21,7 @@ setLoading(true);
 
 const res=await API.get("/jobs");
 
-/* ✅ SUPPORT MULTIPLE RESPONSE TYPES */
+/* SUPPORT MULTIPLE RESPONSE TYPES */
 const jobs=Array.isArray(res.data)
 ?res.data
 :res.data?.data || [];
@@ -55,7 +55,7 @@ try{
 
 await API.post(`/applications/${jobId}`);
 
-alert("✅ Applied successfully");
+alert("Applied successfully");
 
 fetchDrives(); // refresh after apply
 
@@ -123,7 +123,7 @@ className={`status-badge ${
 {job.role || "Job Role"}
 </p>
 
-{/* ✅ APPLY ONLY IF OPEN */}
+{/* APPLY ONLY IF OPEN */}
 {(job.status==="Open" || !job.status)&&(
 
 <button

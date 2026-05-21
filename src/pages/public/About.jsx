@@ -4,7 +4,7 @@ import "../../styles/public/About.css";
 const About = () => {
   return (
     <div className="about-page">
-      {/* ✅ TOP HERO SECTION */}
+      {/* TOP HERO SECTION */}
       <div className="about-hero">
         <div className="about-hero-overlay">
           <div className="container about-hero-content">
@@ -19,9 +19,9 @@ const About = () => {
         </div>
       </div>
 
-      {/* ✅ MAIN CONTENT */}
+      {/* MAIN CONTENT */}
       <div className="container about-main">
-        {/* ✅ SECTION 1 */}
+        {/* SECTION 1 */}
         <div className="about-section">
           <h2>About Placement Cell</h2>
           <p>
@@ -32,7 +32,7 @@ const About = () => {
           </p>
         </div>
 
-        {/* ✅ SECTION 2 */}
+        {/* SECTION 2 */}
         <div className="about-grid">
           <div className="about-card">
             <h3>🎯 Objectives</h3>
@@ -55,7 +55,7 @@ const About = () => {
           </div>
 
           <div className="about-card">
-            <h3>✅ Benefits</h3>
+            <h3>Benefits</h3>
             <ul>
               <li>Quick access to job drives and notices.</li>
               <li>Students can apply online with one click.</li>
@@ -65,7 +65,7 @@ const About = () => {
           </div>
         </div>
 
-        {/* ✅ HOW THIS PORTAL WORKS */}
+        {/* HOW THIS PORTAL WORKS */}
         <div className="about-section about-portal">
           <h2>How This Placement Portal Works</h2>
 
@@ -91,7 +91,7 @@ const About = () => {
           </div>
         </div>
 
-        {/* ✅ FINAL MESSAGE */}
+        {/* FINAL MESSAGE */}
         <div className="about-footer-box">
           <h2>Our Vision</h2>
           <p>

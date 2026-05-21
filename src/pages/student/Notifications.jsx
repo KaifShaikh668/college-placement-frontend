@@ -53,7 +53,7 @@ const res=await API.get(
 "/notifications/student"
 );
 
-/* ✅ SUPPORT MULTIPLE RESPONSE TYPES */
+/* SUPPORT MULTIPLE RESPONSE TYPES */
 const list=Array.isArray(res.data)
 ?res.data
 :res.data?.data || [];
@@ -109,7 +109,7 @@ if(!notice?._id)return;
 setSelectedNotice(notice);
 setShowModal(true);
 
-/* ✅ OPTIMISTIC UPDATE */
+/* OPTIMISTIC UPDATE */
 setNotifications(prev=>
 prev.map(n=>
 n._id===notice._id
@@ -118,7 +118,7 @@ n._id===notice._id
 )
 );
 
-/* ✅ BACKEND READ UPDATE */
+/* BACKEND READ UPDATE */
 try{
 await API.put(
 `/notifications/student/${notice._id}/read`

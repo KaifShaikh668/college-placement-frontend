@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import API from "../../utils/api"; // ✅ USE PRODUCTION API INSTANCE
+import API from "../../utils/api"; 
 import "../../styles/ManageStudents.css";
 
 const PAGE_SIZE = 10;
 
-/* 🔐 MOCK ROLE (later comes from backend / auth) */
+/*MOCK ROLE (later comes from backend / auth) */
 const currentUserRole = "ADMIN"; // change to "VIEWER" to test permissions
 
 export default function ManageStudents() {
@@ -21,7 +21,7 @@ export default function ManageStudents() {
     status: "Active",
   });
 
-  /* ✅ SORT STATE */
+  /*SORT STATE */
   const [sortKey, setSortKey] = useState("");
   const [sortDir, setSortDir] = useState("asc");
 
@@ -32,7 +32,7 @@ export default function ManageStudents() {
     try {
       setLoading(true);
 
-      // ✅ FIXED — NO LOCALHOST
+
       const res = await API.get("/student");
 
       const mapped = res.data.map((s) => ({
@@ -119,12 +119,12 @@ export default function ManageStudents() {
 
     try {
       if (editingId === "new") {
-        alert("Add student backend not connected yet ✅");
+        alert("Add student backend not connected yet");
         cancelEdit();
         return;
       }
 
-      // ✅ FIXED — NO LOCALHOST
+      // NO LOCALHOST
       await API.put(`/student/${editingId}`, {
         name: form.name,
         email: form.email,
@@ -147,7 +147,7 @@ export default function ManageStudents() {
     if (!confirmDelete) return;
 
     try {
-      // ✅ FIXED — NO LOCALHOST
+      // NO LOCALHOST
       await API.delete(`/student/${id}`);
       fetchStudents();
     } catch (error) {

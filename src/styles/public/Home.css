@@ -93,7 +93,7 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
-/* ✅ DROPDOWN FIX (REQUIRED) */
+/* DROPDOWN */
 .dropdown {
   position: relative;
 }
@@ -272,7 +272,7 @@
   color: #0b4f7c;
 }
 
-/* ✅ FULL PAGE ABOUT DESIGN */
+/* FULL PAGE ABOUT DESIGN */
 .about-fullpage {
   min-height: calc(100vh - 140px);
   background: #f5f6f8;
@@ -436,7 +436,7 @@
   line-height: 1.7;
 }
 
-/* ✅ FULL PAGE DEPARTMENTS DESIGN */
+/* FULL PAGE DEPARTMENTS DESIGN */
 .dept-fullpage {
   min-height: calc(100vh - 140px);
   background: #f5f6f8;
@@ -585,7 +585,7 @@
   line-height: 1.7;
 }
 
-/* ✅ RESPONSIVE */
+/* RESPONSIVE */
 @media (max-width: 992px) {
   .about-grid-3 {
     grid-template-columns: 1fr;
@@ -618,7 +618,7 @@
   }
 }
 
-/* ✅ PLACED STUDENTS PAGE */
+/* PLACED STUDENTS PAGE */
 .placed-fullpage {
   min-height: calc(100vh - 140px);
   background: #f5f6f8;
@@ -692,12 +692,12 @@
   color: #333;
 }
 
-/* ✅ Removed hover highlight */
+/* Removed hover highlight */
 .placed-table tbody tr:hover {
   background: transparent;
 }
 
-/* ✅ Remove highlight/selection */
+/* Remove highlight/selection */
 .placed-table th,
 .placed-table td {
   user-select: none;

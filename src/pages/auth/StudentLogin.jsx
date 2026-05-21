@@ -30,11 +30,11 @@ const [showToast,setShowToast]=useState(false);
 
 /* ---------- VALIDATION ---------- */
 
-/* ✅ FIXED STRICT EMAIL VALIDATION */
+/* STRICT EMAIL VALIDATION */
 const emailValid = useMemo(()=>{
 const email = regEmail.trim();
 
-/* ✅ STRICT GMAIL VALIDATION */
+/* STRICT GMAIL VALIDATION */
 const gmailRegex =
 /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
@@ -71,7 +71,7 @@ return;
 try{
 setLoading(true);
 
-/* ✅ CLEAR OLD TOKENS */
+/* CLEAR OLD TOKENS */
 localStorage.removeItem("adminToken");
 
 const res = await API.post("/auth/login",{
@@ -79,19 +79,19 @@ email:loginEmail.trim(),
 password:loginPassword.trim()
 });
 
-/* ✅ SAFETY CHECK */
+/* SAFETY CHECK */
 if(!res?.data?.token){
 throw new Error("Token not received");
 }
 
-/* ✅ SAVE LOGIN DATA */
+/* SAVE LOGIN DATA */
 localStorage.setItem("studentToken",res.data.token);
 localStorage.setItem(
 "student",
 JSON.stringify(res.data.user)
 );
 
-/* ✅ NAVIGATE */
+/* NAVIGATE */
 navigate("/student/dashboard");
 
 }catch(error){

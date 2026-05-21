@@ -17,12 +17,12 @@ try{
 
 const res=await API.get("/applications/my");
 
-/* ✅ SUPPORT BOTH RESPONSE TYPES */
+/* SUPPORT BOTH RESPONSE TYPES */
 const data=Array.isArray(res.data)
 ?res.data
 :res.data?.data || [];
 
-/* ✅ REMOVE DELETED JOB REFERENCES */
+/* REMOVE DELETED JOB REFERENCES */
 const validApplications=
 data.filter(app=>app?.job);
 
